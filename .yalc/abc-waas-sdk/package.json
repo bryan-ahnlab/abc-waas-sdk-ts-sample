@@ -1,0 +1,41 @@
+{
+  "name": "abc-waas-sdk",
+  "version": "0.0.30",
+  "description": "ABC WaaS SDK for React/Next.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "abc",
+    "sdk",
+    "waas",
+    "api",
+    "react"
+  ],
+  "author": "dev.pyoungwoo@gmail.com",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0 <20",
+    "react-dom": ">=18.0.0 <20",
+    "react-router-dom": ">=6.4.0 <7"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.9.2",
+    "@noble/hashes": "^1.8.0",
+    "crypto-js": "^4.2.0",
+    "memory-cache": "^0.2.0",
+    "qs": "^6.14.0"
+  },
+  "yalcSig": "9fbd9807114dd90d1fab9951955968aa"
+}

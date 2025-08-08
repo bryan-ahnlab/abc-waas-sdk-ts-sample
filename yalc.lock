@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "abc-waas-sdk": {
+      "signature": "9fbd9807114dd90d1fab9951955968aa",
+      "file": true,
+      "replaced": "^0.0.10"
+    }
+  }
+}
