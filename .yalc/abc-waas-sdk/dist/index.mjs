@@ -1,12 +1,13 @@
-// src/context/AbcWaasProvider.tsx
-import { useState } from "react";
+import { createContext, useState, useContext, useCallback } from 'react';
+import { jsx } from 'react/jsx-runtime';
+import { p256 } from '@noble/curves/p256';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import CryptoJS from 'crypto-js';
+import qs from 'qs';
+import mCache from 'memory-cache';
 
-// src/context/AbcWaasContext.ts
-import { createContext } from "react";
+// src/context/AbcWaasProvider.tsx
 var AbcWaasContext = createContext(null);
-
-// src/context/AbcWaasProvider.tsx
-import { jsx } from "react/jsx-runtime";
 var AbcWaasProvider = ({ config, children }) => {
   const [basicToken, setBasicToken] = useState(null);
   const [email, setEmail] = useState(null);
@@ -42,9 +43,6 @@ var AbcWaasProvider = ({ config, children }) => {
     }
   );
 };
-
-// src/hooks/useAbcWaas.ts
-import { useContext } from "react";
 function useAbcWaas() {
   const context = useContext(AbcWaasContext);
   if (!context) {
@@ -52,16 +50,6 @@ function useAbcWaas() {
   }
   return context;
 }
-
-// src/hooks/useSnsLogin.ts
-import { useCallback, useState as useState2 } from "react";
-
-// src/api/secureChannel.ts
-import { p256 } from "@noble/curves/p256";
-import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
-import CryptoJS from "crypto-js";
-import qs from "qs";
-import mCache from "memory-cache";
 
 // src/utilities/common.ts
 async function safeParseJson(res, label = "API Error") {
@@ -241,8 +229,8 @@ function useSnsLogin() {
     setAbcUser,
     setSecureChannel
   } = useAbcWaas();
-  const [loading, setLoading] = useState2(false);
-  const [error, setError] = useState2(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const snsLoginV2 = useCallback(
     async (email2, token2, service2) => {
       try {
@@ -371,8 +359,7 @@ function useSnsLogin() {
     setError
   };
 }
-export {
-  AbcWaasProvider,
-  useAbcWaas,
-  useSnsLogin
-};
+
+export { AbcWaasProvider, useAbcWaas, useSnsLogin };
+//# sourceMappingURL=index.mjs.map
+//# sourceMappingURL=index.mjs.map

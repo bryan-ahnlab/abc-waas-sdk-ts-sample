@@ -1,60 +1,31 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+'use strict';
 
-// src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  AbcWaasProvider: () => AbcWaasProvider,
-  useAbcWaas: () => useAbcWaas,
-  useSnsLogin: () => useSnsLogin
-});
-module.exports = __toCommonJS(index_exports);
+var react = require('react');
+var jsxRuntime = require('react/jsx-runtime');
+var p256 = require('@noble/curves/p256');
+var utils = require('@noble/hashes/utils');
+var CryptoJS = require('crypto-js');
+var qs = require('qs');
+var mCache = require('memory-cache');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
+
+var CryptoJS__default = /*#__PURE__*/_interopDefault(CryptoJS);
+var qs__default = /*#__PURE__*/_interopDefault(qs);
+var mCache__default = /*#__PURE__*/_interopDefault(mCache);
 
 // src/context/AbcWaasProvider.tsx
-var import_react2 = require("react");
-
-// src/context/AbcWaasContext.ts
-var import_react = require("react");
-var AbcWaasContext = (0, import_react.createContext)(null);
-
-// src/context/AbcWaasProvider.tsx
-var import_jsx_runtime = require("react/jsx-runtime");
+var AbcWaasContext = react.createContext(null);
 var AbcWaasProvider = ({ config, children }) => {
-  const [basicToken, setBasicToken] = (0, import_react2.useState)(null);
-  const [email, setEmail] = (0, import_react2.useState)(null);
-  const [token, setToken] = (0, import_react2.useState)(null);
-  const [service, setService] = (0, import_react2.useState)(null);
-  const [abcAuth, setAbcAuth] = (0, import_react2.useState)(null);
-  const [abcWallet, setAbcWallet] = (0, import_react2.useState)(null);
-  const [abcUser, setAbcUser] = (0, import_react2.useState)(null);
-  const [secureChannel, setSecureChannel] = (0, import_react2.useState)(null);
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+  const [basicToken, setBasicToken] = react.useState(null);
+  const [email, setEmail] = react.useState(null);
+  const [token, setToken] = react.useState(null);
+  const [service, setService] = react.useState(null);
+  const [abcAuth, setAbcAuth] = react.useState(null);
+  const [abcWallet, setAbcWallet] = react.useState(null);
+  const [abcUser, setAbcUser] = react.useState(null);
+  const [secureChannel, setSecureChannel] = react.useState(null);
+  return /* @__PURE__ */ jsxRuntime.jsx(
     AbcWaasContext.Provider,
     {
       value: {
@@ -80,26 +51,13 @@ var AbcWaasProvider = ({ config, children }) => {
     }
   );
 };
-
-// src/hooks/useAbcWaas.ts
-var import_react3 = require("react");
 function useAbcWaas() {
-  const context = (0, import_react3.useContext)(AbcWaasContext);
+  const context = react.useContext(AbcWaasContext);
   if (!context) {
     throw new Error("Must be used inside AbcWaasProvider");
   }
   return context;
 }
-
-// src/hooks/useSnsLogin.ts
-var import_react4 = require("react");
-
-// src/api/secureChannel.ts
-var import_p256 = require("@noble/curves/p256");
-var import_utils = require("@noble/hashes/utils");
-var import_crypto_js = __toESM(require("crypto-js"));
-var import_qs = __toESM(require("qs"));
-var import_memory_cache = __toESM(require("memory-cache"));
 
 // src/utilities/common.ts
 async function safeParseJson(res, label = "API Error") {
@@ -121,8 +79,8 @@ async function createSecureChannel(config) {
   try {
     const keyPair = createKeypair();
     const message = "Bryan";
-    const formData = import_qs.default.stringify({
-      pubkey: (0, import_utils.bytesToHex)(keyPair.publicKey),
+    const formData = qs__default.default.stringify({
+      pubkey: utils.bytesToHex(keyPair.publicKey),
       plain: message
     });
     const response = await fetch(
@@ -136,19 +94,19 @@ async function createSecureChannel(config) {
     if (!response.ok)
       throw new Error(`Failed to create secure channel: ${response.status}`);
     const responseData = await safeParseJson(response, "createSecureChannel");
-    const serverPubkey = (0, import_utils.hexToBytes)(responseData.publickey);
-    const shared = import_p256.p256.getSharedSecret(keyPair.privateKey, serverPubkey);
+    const serverPubkey = utils.hexToBytes(responseData.publickey);
+    const shared = p256.p256.getSharedSecret(keyPair.privateKey, serverPubkey);
     const sharedX = shared.slice(1, 33);
-    const secretKey = (0, import_utils.bytesToHex)(sharedX).padStart(64, "0");
+    const secretKey = utils.bytesToHex(sharedX).padStart(64, "0");
     const result = {
       ChannelID: responseData.channelid,
       Encrypted: responseData.encrypted,
       ServerPublicKey: responseData.publickey,
       Message: message,
-      PrivateKey: (0, import_utils.bytesToHex)(keyPair.privateKey),
+      PrivateKey: utils.bytesToHex(keyPair.privateKey),
       SecretKey: secretKey
     };
-    import_memory_cache.default.put(
+    mCache__default.default.put(
       "secureChannel",
       { data: responseData, keyPair, secretKey },
       20 * 60 * 1e3
@@ -161,8 +119,8 @@ async function createSecureChannel(config) {
   }
 }
 function createKeypair() {
-  const privateKey = import_p256.p256.utils.randomPrivateKey();
-  const publicKey = import_p256.p256.getPublicKey(privateKey, false);
+  const privateKey = p256.p256.utils.randomPrivateKey();
+  const publicKey = p256.p256.getPublicKey(privateKey, false);
   return { privateKey, publicKey };
 }
 var randomPassword = () => {
@@ -175,18 +133,18 @@ var randomPassword = () => {
   return password;
 };
 var encryptedPassword = (secret) => {
-  const key = import_crypto_js.default.enc.Hex.parse(secret.substring(0, 32)).toString(import_crypto_js.default.enc.Hex).substring(0, 32);
-  const iv = import_crypto_js.default.enc.Hex.parse(secret.substring(AES_KEY_LENGTH));
-  const encrypted = import_crypto_js.default.AES.encrypt(
+  const key = CryptoJS__default.default.enc.Hex.parse(secret.substring(0, 32)).toString(CryptoJS__default.default.enc.Hex).substring(0, 32);
+  const iv = CryptoJS__default.default.enc.Hex.parse(secret.substring(AES_KEY_LENGTH));
+  const encrypted = CryptoJS__default.default.AES.encrypt(
     randomPassword(),
-    import_crypto_js.default.enc.Hex.parse(key),
+    CryptoJS__default.default.enc.Hex.parse(key),
     {
       iv,
-      mode: import_crypto_js.default.mode.CBC,
-      padding: import_crypto_js.default.pad.Pkcs7
+      mode: CryptoJS__default.default.mode.CBC,
+      padding: CryptoJS__default.default.pad.Pkcs7
     }
   );
-  return encrypted.ciphertext.toString(import_crypto_js.default.enc.Base64);
+  return encrypted.ciphertext.toString(CryptoJS__default.default.enc.Base64);
 };
 
 // src/api/v2/auth.ts
@@ -279,9 +237,9 @@ function useSnsLogin() {
     setAbcUser,
     setSecureChannel
   } = useAbcWaas();
-  const [loading, setLoading] = (0, import_react4.useState)(false);
-  const [error, setError] = (0, import_react4.useState)(null);
-  const snsLoginV2 = (0, import_react4.useCallback)(
+  const [loading, setLoading] = react.useState(false);
+  const [error, setError] = react.useState(null);
+  const snsLoginV2 = react.useCallback(
     async (email2, token2, service2) => {
       try {
         setLoading(true);
@@ -409,9 +367,9 @@ function useSnsLogin() {
     setError
   };
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  AbcWaasProvider,
-  useAbcWaas,
-  useSnsLogin
-});
+
+exports.AbcWaasProvider = AbcWaasProvider;
+exports.useAbcWaas = useAbcWaas;
+exports.useSnsLogin = useSnsLogin;
+//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.js.map
