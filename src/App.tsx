@@ -20,7 +20,23 @@ import Execute from "./components/sdk/common/Execute";
 /* Common */
 import Information from "./components/common/Information";
 
-const config: AbcWaasConfig = {
+/* Pre-built UI */
+import {
+  Login as LoginPage,
+  AbcWaasConfig as PrebuiltUIAbcWaasConfig,
+  AbcWaasProvider as PrebuiltUIProvider,
+} from "abc-waas-prebuiltui-sdk";
+
+/* ABC WaaS */
+const AbcWaasconfig: AbcWaasConfig = {
+  API_WAAS_MYABCWALLET_URL:
+    process.env.REACT_APP_API_WAAS_MYABCWALLET_URI || "",
+  MW_MYABCWALLET_URL: process.env.REACT_APP_MW_MYABCWALLET_URI || "",
+  CLIENT_ID: process.env.REACT_APP_CLIENT_ID || "",
+  CLIENT_SECRET: process.env.REACT_APP_CLIENT_SECRET || "",
+};
+
+const AbcWaasPrebuiltUIconfig: PrebuiltUIAbcWaasConfig = {
   API_WAAS_MYABCWALLET_URL:
     process.env.REACT_APP_API_WAAS_MYABCWALLET_URI || "",
   MW_MYABCWALLET_URL: process.env.REACT_APP_MW_MYABCWALLET_URI || "",
@@ -30,31 +46,40 @@ const config: AbcWaasConfig = {
 
 function App() {
   return (
-    <AbcWaasProvider config={config}>
-      <BrowserRouter>
-        {/* ABC WaaS */}
-        {/* <ABCWaaSLogin /> */}
-        {/* or */}
-        {/* <ABCWaaSRedirect />
+    <>
+      {/* ABC WaaS SDK */}
+      {/* <AbcWaasProvider config={AbcWaasconfig}>
+        <BrowserRouter> */}
+      {/* ABC WaaS */}
+      {/* <ABCWaaSLogin /> */}
+      {/* or */}
+      {/* <ABCWaaSRedirect />
         <ABCWaaSCallback /> */}
-        {/*  */}
-        {/* Open Authorization 2.0 */}
-        {/* <OAuth2Login /> */}
-        {/* or */}
-        {/* <OAuth2Redirect />
+      {/*  */}
+      {/* Open Authorization 2.0 */}
+      {/* <OAuth2Login /> */}
+      {/* or */}
+      {/* <OAuth2Redirect />
         <OAuth2Callback /> */}
-        {/*  */}
-        {/* SDK */}
-        {/* <SDKLogin /> */}
-        <SDKRedirect />
-        <SDKCallback />
-        <Execute />
-        {/*  */}
-        {/* Common */}
-        <Information />
-        {/*  */}
-      </BrowserRouter>
-    </AbcWaasProvider>
+      {/*  */}
+      {/* SDK */}
+      {/* <SDKLogin /> */}
+      {/* <SDKRedirect />
+          <SDKCallback />
+          <Execute /> */}
+      {/*  */}
+      {/* Common */}
+      {/* <Information /> */}
+      {/*  */}
+      {/* </BrowserRouter>
+      </AbcWaasProvider> */}
+      {/* ABC WaaS SDK */}
+      {/* ABC WaaS Prebuilt UI SDK */}
+      <PrebuiltUIProvider config={AbcWaasPrebuiltUIconfig}>
+        <LoginPage />
+      </PrebuiltUIProvider>
+      {/* ABC WaaS Prebuilt UI SDK */}
+    </>
   );
 }
 
