@@ -1,7 +1,7 @@
 {
   "name": "abc-waas-prebuiltui-sdk",
-  "version": "0.1.0",
-  "description": "Pre-built UI components for ABC WaaS SDK",
+  "version": "0.1.3",
+  "description": "ABC WaaS Prebuilt UI SDK for React/Next.js",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -19,10 +19,10 @@
   "keywords": [
     "abc",
     "waas",
+    "prebuilt",
     "sdk",
     "ui",
-    "react",
-    "prebuilt"
+    "react"
   ],
   "author": "dev.pyoungwoo@gmail.com",
   "license": "MIT",
@@ -31,8 +31,8 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "abc-waas-sdk": "^0.0.33",
+    "abc-waas-core-sdk": "^0.1.3",
     "jose": "^6.0.13"
   },
-  "yalcSig": "6a996f4042cbae6f853600906216f659"
+  "yalcSig": "ee29c7bf6b8ab68dba0f8fe76a8b2d51"
 }

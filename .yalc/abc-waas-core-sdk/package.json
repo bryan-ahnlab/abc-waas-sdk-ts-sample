@@ -1,6 +1,6 @@
 {
   "name": "abc-waas-core-sdk",
-  "version": "0.0.1",
+  "version": "0.1.3",
   "description": "ABC WaaS Core SDK for React/Next.js",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -37,5 +37,5 @@
     "memory-cache": "^0.2.0",
     "qs": "^6.14.0"
   },
-  "yalcSig": "2ec84b517057dc3471ce495563df4388"
+  "yalcSig": "e4fefa8cf00276c8f86042939b813306"
 }
