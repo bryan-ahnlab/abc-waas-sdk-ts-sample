@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 import GoogleIcon from "../../../assets/icon/provider/icon_google.svg";
 import AppleIcon from "../../../assets/icon/provider/icon_apple.svg";
@@ -116,11 +116,11 @@ export default function Login() {
   const navigate = useNavigate();
 
   const {
-    snsLoginV2,
+    loginV2,
     loading: loadingSnsLogin,
     error: errorSnsLogin,
     service: serviceSnsLogin,
-  } = useSnsLogin();
+  } = useLogin();
 
   const handleRedirect = async (provider: Providers) => {
     localStorage.setItem("provider", provider);
@@ -141,13 +141,13 @@ export default function Login() {
   const handleCallback = useCallback(
     async (email: string, idToken: string, service: string) => {
       try {
-        await snsLoginV2(email, idToken, service);
+        await loginV2(email, idToken, service);
         navigate(RETURN_URL);
       } catch (error) {
         console.error(error);
       }
     },
-    [snsLoginV2, navigate]
+    [loginV2, navigate]
   );
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 // src/components/Information.tsx
 
 import React from "react";
-import { useAbcWaas } from "abc-waas-sdk";
+import { useAbcWaas } from "abc-waas-core-sdk";
 
 const containerStyle = {
   margin: "40px",

@@ -1,6 +1,6 @@
 // src/components/abc-waas/multiple/Redirect.tsx
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 import GoogleIcon from "../../../assets/icon/provider/icon_google.svg";
 import AppleIcon from "../../../assets/icon/provider/icon_apple.svg";
@@ -107,7 +107,7 @@ const buttonBaseStyle = {
 } as const;
 
 export default function Redirect() {
-  const { loading: loadingSnsLogin } = useSnsLogin();
+  const { loading: loadingSnsLogin } = useLogin();
 
   const handleRedirect = async (provider: Providers) => {
     localStorage.setItem("provider", provider);

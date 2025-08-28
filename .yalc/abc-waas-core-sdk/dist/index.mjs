@@ -46,31 +46,38 @@ var AbcWaasProvider = ({ config, children }) => {
 function useAbcWaas() {
   const context = useContext(AbcWaasContext);
   if (!context) {
-    throw new Error("Must be used inside AbcWaasProvider");
+    throw new Error("Not found AbcWaasContext");
   }
   return context;
 }
 
-// src/utilities/common.ts
-async function safeParseJson(res, label = "API Error") {
-  const text = await res.text();
-  try {
-    const data = JSON.parse(text);
-    if (!res.ok) {
-      throw new Error(`[${label}] ${JSON.stringify(data, null, 2)}`);
+// src/utilities/parser.ts
+async function safeParseJson(response, label = "Unknown Error") {
+  const text = await response.text();
+  if (!text) {
+    if (!response.ok) {
+      throw new Error(`[${label}] Empty response body`);
     }
-    return data;
-  } catch (err) {
+    return null;
+  }
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
     throw new Error(`[${label}] ${text}`);
   }
+  if (!response.ok) {
+    throw new Error(`[${label}] ${JSON.stringify(data, null, 2)}`);
+  }
+  return data;
 }
 
-// src/api/secureChannel.ts
+// src/api/common/secureChannel.ts
 var AES_KEY_LENGTH = 32;
 async function createSecureChannel(config) {
   try {
     const keyPair = createKeypair();
-    const message = "Bryan";
+    const message = "AhnLab Blockchain Company";
     const formData = qs.stringify({
       pubkey: bytesToHex(keyPair.publicKey),
       plain: message
@@ -208,30 +215,30 @@ async function postMpcWalletsV2(config, accessToken, email, channelid, devicePas
   });
 }
 
-// src/hooks/useSnsLogin.ts
-function useSnsLogin() {
+// src/hooks/useLogin.ts
+function useLogin() {
   const {
     config,
     basicToken,
-    email,
-    token,
-    service,
-    abcAuth,
-    abcWallet,
-    abcUser,
-    secureChannel,
-    setEmail,
-    setToken,
-    setService,
     setBasicToken,
+    email,
+    setEmail,
+    token,
+    setToken,
+    service,
+    setService,
+    abcAuth,
     setAbcAuth,
+    abcWallet,
     setAbcWallet,
+    abcUser,
     setAbcUser,
+    secureChannel,
     setSecureChannel
   } = useAbcWaas();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const snsLoginV2 = useCallback(
+  const loginV2 = useCallback(
     async (email2, token2, service2) => {
       try {
         setLoading(true);
@@ -344,6 +351,7 @@ function useSnsLogin() {
     [config]
   );
   return {
+    config,
     basicToken,
     email,
     token,
@@ -352,7 +360,7 @@ function useSnsLogin() {
     abcWallet,
     abcUser,
     secureChannel,
-    snsLoginV2,
+    loginV2,
     loading,
     setLoading,
     error,
@@ -360,6 +368,6 @@ function useSnsLogin() {
   };
 }
 
-export { AbcWaasProvider, useAbcWaas, useSnsLogin };
+export { AbcWaasProvider, useAbcWaas, useLogin };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

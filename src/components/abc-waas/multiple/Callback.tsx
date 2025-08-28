@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 import LoadingAnimation from "../../../assets/animation/common/animation_loading.svg";
 
@@ -60,21 +60,21 @@ export default function Callback() {
   const navigate = useNavigate();
 
   const {
-    snsLoginV2,
+    loginV2,
     loading: loadingSnsLogin,
     error: errorSnsLogin,
-  } = useSnsLogin();
+  } = useLogin();
 
   const handleCallback = useCallback(
     async (email: string, idToken: string, service: string) => {
       try {
-        await snsLoginV2(email, idToken, service);
+        await loginV2(email, idToken, service);
         navigate(RETURN_URL);
       } catch (error) {
         console.error(error);
       }
     },
-    [snsLoginV2, navigate]
+    [loginV2, navigate]
   );
 
   useEffect(() => {

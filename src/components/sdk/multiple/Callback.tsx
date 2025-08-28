@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 import { SignJWT } from "jose";
 import { verifyAppleToken, getAppleToken } from "../../oauth2/utilities/apple";
 import {
@@ -70,7 +70,7 @@ export default function Callback() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { error: errorSnsLogin, snsLoginV2 } = useSnsLogin();
+  const { error: errorSnsLogin, loginV2 } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);

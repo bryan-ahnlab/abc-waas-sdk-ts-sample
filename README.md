@@ -103,7 +103,7 @@ src/
 ### ABC WaaS 인증 사용
 
 ```tsx
-import { AbcWaasProvider } from "abc-waas-sdk";
+import { AbcWaasProvider } from "abc-waas-core-sdk";
 import ABCWaaSLogin from "./components/abc-waas/single/Login";
 
 const config = {

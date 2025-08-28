@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 const containerStyle = {
   margin: "40px",
@@ -48,7 +48,7 @@ const buttonBaseStyle = {
 export default function Execute() {
   const location = useLocation();
 
-  const { snsLoginV2, loading } = useSnsLogin();
+  const { loginV2, loading } = useLogin();
 
   const [email, setEmail] = useState<string | null>(null);
   const [idToken, setIdToken] = useState<string | null>(null);
@@ -66,9 +66,9 @@ export default function Execute() {
     setProvider(provider);
   }, [location.search]);
 
-  const handleSnsLoginV2 = () => {
+  const handleLoginV2 = () => {
     if (email && idToken && provider) {
-      snsLoginV2(email, idToken, provider);
+      loginV2(email, idToken, provider);
     }
   };
 
@@ -113,7 +113,7 @@ export default function Execute() {
         />
 
         <button
-          onClick={() => handleSnsLoginV2()}
+          onClick={() => handleLoginV2()}
           disabled={loading}
           style={{
             ...buttonBaseStyle,

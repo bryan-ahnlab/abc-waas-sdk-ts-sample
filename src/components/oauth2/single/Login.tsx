@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 import GoogleIcon from "../../../assets/icon/provider/icon_google.svg";
 import AppleIcon from "../../../assets/icon/provider/icon_apple.svg";
@@ -130,10 +130,10 @@ export default function Login() {
   const location = useLocation();
 
   const {
-    snsLoginV2,
+    loginV2,
     error: errorSnsLogin,
     service: serviceSnsLogin,
-  } = useSnsLogin();
+  } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -292,7 +292,7 @@ export default function Login() {
             getGoogleTokenData.id_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getGoogleTokeninfoData.email,
             getGoogleTokenData.id_token,
             provider
@@ -342,7 +342,7 @@ export default function Login() {
             process.env.REACT_APP_APPLE_CLIENT_ID
           );
 
-          await snsLoginV2(
+          await loginV2(
             getAppleDecodedTokenData.email,
             getAppleTokenData.id_token,
             provider
@@ -373,7 +373,7 @@ export default function Login() {
             getNaverTokenData.access_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getNaverTokeninfoData.response.email,
             getNaverTokenData.access_token,
             provider
@@ -405,7 +405,7 @@ export default function Login() {
             getKakaoTokenData.access_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getKakaoTokeninfoData.kakao_account.email,
             getKakaoTokenData.id_token,
             provider
@@ -437,7 +437,7 @@ export default function Login() {
             process.env.REACT_APP_LINE_CLIENT_ID
           );
 
-          await snsLoginV2(
+          await loginV2(
             getLineTokeninfoData.email,
             getLineTokenData.id_token,
             provider
@@ -458,7 +458,7 @@ export default function Login() {
         setLoading(false);
       }
     },
-    [snsLoginV2, errorSnsLogin, navigate]
+    [loginV2, errorSnsLogin, navigate]
   );
 
   useEffect(() => {

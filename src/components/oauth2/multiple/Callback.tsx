@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 import { SignJWT } from "jose";
 import { verifyAppleToken, getAppleToken } from "../utilities/apple";
 import { getGoogleToken, getGoogleTokeninfo } from "../utilities/google";
@@ -67,7 +67,7 @@ export default function Callback() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { error: errorSnsLogin, snsLoginV2 } = useSnsLogin();
+  const { error: errorSnsLogin, loginV2 } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -102,7 +102,7 @@ export default function Callback() {
             getGoogleTokenData.id_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getGoogleTokeninfoData.email,
             getGoogleTokenData.id_token,
             provider
@@ -152,7 +152,7 @@ export default function Callback() {
             process.env.REACT_APP_APPLE_CLIENT_ID
           );
 
-          await snsLoginV2(
+          await loginV2(
             getAppleDecodedTokenData.email,
             getAppleTokenData.id_token,
             provider
@@ -183,7 +183,7 @@ export default function Callback() {
             getNaverTokenData.access_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getNaverTokeninfoData.response.email,
             getNaverTokenData.access_token,
             provider
@@ -215,7 +215,7 @@ export default function Callback() {
             getKakaoTokenData.access_token
           );
 
-          await snsLoginV2(
+          await loginV2(
             getKakaoTokeninfoData.kakao_account.email,
             getKakaoTokenData.id_token,
             provider
@@ -247,7 +247,7 @@ export default function Callback() {
             process.env.REACT_APP_LINE_CLIENT_ID
           );
 
-          await snsLoginV2(
+          await loginV2(
             getLineTokeninfoData.email,
             getLineTokenData.id_token,
             provider
@@ -268,7 +268,7 @@ export default function Callback() {
         setLoading(false);
       }
     },
-    [snsLoginV2, errorSnsLogin, navigate]
+    [loginV2, errorSnsLogin, navigate]
   );
 
   useEffect(() => {

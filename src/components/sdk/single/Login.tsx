@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { useSnsLogin } from "abc-waas-sdk";
+import { useLogin } from "abc-waas-core-sdk";
 
 import GoogleIcon from "../../../assets/icon/provider/icon_google.svg";
 import AppleIcon from "../../../assets/icon/provider/icon_apple.svg";
@@ -132,7 +132,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { error: errorSnsLogin, service: serviceSnsLogin } = useSnsLogin();
+  const { error: errorSnsLogin, service: serviceSnsLogin } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);

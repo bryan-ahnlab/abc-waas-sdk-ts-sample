@@ -3,9 +3,9 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import {
-  AbcWaasConfig as AbcWaasCoreConfig,
+  type AbcWaasConfigType,
   AbcWaasProvider as AbcWaasCoreProvider,
-} from "abc-waas-sdk";
+} from "abc-waas-core-sdk";
 /* ABC WaaS */
 import ABCWaaSLogin from "./components/abc-waas/single/Login";
 import ABCWaaSRedirect from "./components/abc-waas/multiple/Redirect";
@@ -26,12 +26,12 @@ import Information from "./components/common/Information";
 /* Pre-built UI */
 import {
   Login as LoginPage,
-  AbcWaasConfig as PrebuiltUIAbcWaasConfig,
+  type AbcWaasConfig,
   AbcWaasProvider as PrebuiltUIProvider,
 } from "abc-waas-prebuiltui-sdk";
 
 /* ABC WaaS */
-const AbcWaasConfig: AbcWaasCoreConfig = {
+const AbcWaasCoreConfig: AbcWaasConfigType = {
   API_WAAS_MYABCWALLET_URL:
     process.env.REACT_APP_API_WAAS_MYABCWALLET_URI || "",
   MW_MYABCWALLET_URL: process.env.REACT_APP_MW_MYABCWALLET_URI || "",
@@ -39,7 +39,7 @@ const AbcWaasConfig: AbcWaasCoreConfig = {
   CLIENT_SECRET: process.env.REACT_APP_CLIENT_SECRET || "",
 };
 
-const AbcWaasPrebuiltUIConfig: PrebuiltUIAbcWaasConfig = {
+const AbcWaasPrebuiltUIConfig: AbcWaasConfig = {
   API_WAAS_MYABCWALLET_URL:
     process.env.REACT_APP_API_WAAS_MYABCWALLET_URI || "",
   MW_MYABCWALLET_URL: process.env.REACT_APP_MW_MYABCWALLET_URI || "",
@@ -51,7 +51,7 @@ function App() {
   return (
     <>
       {/* ABC WaaS SDK */}
-      <AbcWaasCoreProvider config={AbcWaasConfig}>
+      <AbcWaasCoreProvider config={AbcWaasCoreConfig}>
         <BrowserRouter>
           {/* ABC WaaS */}
           {/* <ABCWaaSLogin /> */}

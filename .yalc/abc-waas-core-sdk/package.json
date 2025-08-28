@@ -1,7 +1,7 @@
 {
-  "name": "abc-waas-sdk",
-  "version": "0.0.33",
-  "description": "ABC WaaS SDK for React/Next.js",
+  "name": "abc-waas-core-sdk",
+  "version": "0.0.1",
+  "description": "ABC WaaS Core SDK for React/Next.js",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -18,8 +18,9 @@
   },
   "keywords": [
     "abc",
-    "sdk",
     "waas",
+    "core",
+    "sdk",
     "api",
     "react"
   ],
@@ -29,11 +30,6 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "peerDependenciesMeta": {
-    "react-router-dom": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "@noble/curves": "^1.9.2",
     "@noble/hashes": "^1.8.0",
@@ -41,5 +37,5 @@
     "memory-cache": "^0.2.0",
     "qs": "^6.14.0"
   },
-  "yalcSig": "26a2f987c4e28d799fc379db8dca70b7"
+  "yalcSig": "2ec84b517057dc3471ce495563df4388"
 }
