@@ -36,26 +36,36 @@ yarn add abc-waas-prebuiltui-sdk
 프로젝트 루트에 `.env` 파일을 생성하고 다음 환경 변수를 설정하세요:
 
 ```env
-# ABC WaaS 설정
-REACT_APP_API_WAAS_MYABCWALLET_URI=https://api.abcwallet.com
-REACT_APP_MW_MYABCWALLET_URI=https://myabcwallet.com
-REACT_APP_CLIENT_ID=your_client_id
-REACT_APP_CLIENT_SECRET=your_client_secret
+# ABC WaaS API (Optional)
+REACT_APP_REDIRECT_URI=http://localhost:3000
 
-# OAuth2 Provider 설정
-REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+# ABC WaaS Config
+REACT_APP_API_WAAS_MYABCWALLET_URI=https://dev-api.waas.myabcwallet.com
+REACT_APP_MW_MYABCWALLET_URI=https://mw.myabcwallet.com
+
+REACT_APP_CLIENT_ID=your_client_id_here
+REACT_APP_CLIENT_SECRET=your_client_secret_here
+
+# OAuth2
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id_here
+REACT_APP_GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 REACT_APP_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=google
 
-REACT_APP_APPLE_CLIENT_ID=your_apple_client_id
-REACT_APP_APPLE_REDIRECT_URI=your_apple_redirect_uri
+REACT_APP_APPLE_CLIENT_ID=your_apple_client_id_here
+REACT_APP_APPLE_REDIRECT_URI=your_apple_redirect_uri_here
+REACT_APP_APPLE_TEAM_ID=your_apple_team_id_here
+REACT_APP_APPLE_KEY_ID=your_apple_key_id_here
+REACT_APP_APPLE_PRIVATE_KEY=your_apple_private_key_here
 
-REACT_APP_NAVER_CLIENT_ID=your_naver_client_id
+REACT_APP_NAVER_CLIENT_ID=your_naver_client_id_here
+REACT_APP_NAVER_CLIENT_SECRET=your_naver_client_secret_here
 REACT_APP_NAVER_REDIRECT_URI=http://localhost:3000
 
-REACT_APP_KAKAO_REST_API_KEY=your_kakao_rest_api_key
+REACT_APP_KAKAO_REST_API_KEY=your_kakao_rest_api_key_here
 REACT_APP_KAKAO_REDIRECT_URI=http://localhost:3000/auth/signin?provider=kakao
 
-REACT_APP_LINE_CLIENT_ID=your_line_client_id
+REACT_APP_LINE_CLIENT_ID=your_line_client_id_here
+REACT_APP_LINE_CLIENT_SECRET=your_line_client_secret_here
 REACT_APP_LINE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=line
 ```
 
@@ -97,10 +107,10 @@ export default App;
 import { AbcWaasProvider } from "abc-waas-prebuiltui-sdk";
 
 const config = {
-  API_WAAS_MYABCWALLET_URL: "https://api.abcwallet.com",
-  MW_MYABCWALLET_URL: "https://myabcwallet.com",
-  CLIENT_ID: "your_client_id",
-  CLIENT_SECRET: "your_client_secret",
+  API_WAAS_MYABCWALLET_URL: "https://dev-api.waas.myabcwallet.com",
+  MW_MYABCWALLET_URL: "https://mw.myabcwallet.com",
+  CLIENT_ID: "your_client_id_here",
+  CLIENT_SECRET: "your_client_secret_here",
 };
 
 function App() {
@@ -135,7 +145,7 @@ function LoginPage() {
 import { Login, useAbcWaas } from "abc-waas-prebuiltui-sdk";
 
 function LoginPage() {
-  const { snsLoginV2 } = useAbcWaas();
+  const { loginV2 } = useAbcWaas();
 
   const handleSnsLogin = async (
     email: string,
@@ -143,7 +153,7 @@ function LoginPage() {
     provider: string
   ) => {
     try {
-      await snsLoginV2(email, token, provider);
+      await loginV2(email, token, provider);
       console.log("로그인 성공:", { email, provider });
     } catch (error) {
       console.error("로그인 실패:", error);
@@ -310,7 +320,7 @@ const {
   setSecureChannel: (secureChannel: any) => void,
 
   // 로그인 함수
-  snsLoginV2: (email: string, token: string, provider: string) => Promise<void>,
+  loginV2: (email: string, token: string, provider: string) => Promise<void>,
 } = useAbcWaas();
 ```
 
@@ -318,47 +328,59 @@ const {
 
 ### 필수 환경 변수
 
-| 변수명                               | 설명                       | 예시                        |
-| ------------------------------------ | -------------------------- | --------------------------- |
-| `REACT_APP_API_WAAS_MYABCWALLET_URI` | ABC WaaS API 서버 URL      | `https://api.abcwallet.com` |
-| `REACT_APP_MW_MYABCWALLET_URI`       | ABC WaaS MW 서버 URL       | `https://myabcwallet.com`   |
-| `REACT_APP_CLIENT_ID`                | ABC WaaS 클라이언트 ID     | `your_client_id`            |
-| `REACT_APP_CLIENT_SECRET`            | ABC WaaS 클라이언트 시크릿 | `your_client_secret`        |
+| 변수명                               | 설명                       | 예시                                   |
+| ------------------------------------ | -------------------------- | -------------------------------------- |
+| `REACT_APP_API_WAAS_MYABCWALLET_URI` | ABC WaaS API 서버 URL      | `https://dev-api.waas.myabcwallet.com` |
+| `REACT_APP_MW_MYABCWALLET_URI`       | ABC WaaS MW 서버 URL       | `https://mw.myabcwallet.com`           |
+| `REACT_APP_CLIENT_ID`                | ABC WaaS 클라이언트 ID     | `your_client_id_here`                  |
+| `REACT_APP_CLIENT_SECRET`            | ABC WaaS 클라이언트 시크릿 | `your_client_secret_here`              |
+
+### 선택적 환경 변수
+
+| 변수명                   | 설명                | 예시                    |
+| ------------------------ | ------------------- | ----------------------- |
+| `REACT_APP_REDIRECT_URI` | 기본 리다이렉트 URI | `http://localhost:3000` |
 
 ### OAuth2 Provider 환경 변수
 
 #### Google
 
 ```env
-REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id_here
+REACT_APP_GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 REACT_APP_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=google
 ```
 
 #### Apple
 
 ```env
-REACT_APP_APPLE_CLIENT_ID=your_apple_client_id
-REACT_APP_APPLE_REDIRECT_URI=your_apple_redirect_uri
+REACT_APP_APPLE_CLIENT_ID=your_apple_client_id_here
+REACT_APP_APPLE_REDIRECT_URI=your_apple_redirect_uri_here
+REACT_APP_APPLE_TEAM_ID=your_apple_team_id_here
+REACT_APP_APPLE_KEY_ID=your_apple_key_id_here
+REACT_APP_APPLE_PRIVATE_KEY=your_apple_private_key_here
 ```
 
 #### Naver
 
 ```env
-REACT_APP_NAVER_CLIENT_ID=your_naver_client_id
+REACT_APP_NAVER_CLIENT_ID=your_naver_client_id_here
+REACT_APP_NAVER_CLIENT_SECRET=your_naver_client_secret_here
 REACT_APP_NAVER_REDIRECT_URI=http://localhost:3000
 ```
 
 #### Kakao
 
 ```env
-REACT_APP_KAKAO_REST_API_KEY=your_kakao_rest_api_key
+REACT_APP_KAKAO_REST_API_KEY=your_kakao_rest_api_key_here
 REACT_APP_KAKAO_REDIRECT_URI=http://localhost:3000/auth/signin?provider=kakao
 ```
 
 #### LINE
 
 ```env
-REACT_APP_LINE_CLIENT_ID=your_line_client_id
+REACT_APP_LINE_CLIENT_ID=your_line_client_id_here
+REACT_APP_LINE_CLIENT_SECRET=your_line_client_secret_here
 REACT_APP_LINE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=line
 ```
 

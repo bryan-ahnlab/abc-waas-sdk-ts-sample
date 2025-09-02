@@ -25,10 +25,11 @@ import Information from "./components/common/Information";
 
 /* Pre-built UI */
 import {
-  Login as LoginPage,
   type AbcWaasConfigType as AbcWaasPrebuiltUIConfigType,
-  AbcWaasProvider as PrebuiltUIProvider,
+  AbcWaasProvider as AbcWaasPrebuiltUIProvider,
 } from "abc-waas-prebuiltui-sdk";
+
+import LoginPage from "./components/LoginPage";
 
 /* ABC WaaS */
 const AbcWaasCoreConfig: AbcWaasCoreConfigType = {
@@ -78,9 +79,9 @@ function App() {
       </AbcWaasCoreProvider> */}
       {/* ABC WaaS SDK */}
       {/* ABC WaaS Prebuilt UI SDK */}
-      <PrebuiltUIProvider config={AbcWaasPrebuiltUIConfig}>
+      <AbcWaasPrebuiltUIProvider config={AbcWaasPrebuiltUIConfig}>
         <LoginPage />
-      </PrebuiltUIProvider>
+      </AbcWaasPrebuiltUIProvider>
       {/* ABC WaaS Prebuilt UI SDK */}
     </>
   );

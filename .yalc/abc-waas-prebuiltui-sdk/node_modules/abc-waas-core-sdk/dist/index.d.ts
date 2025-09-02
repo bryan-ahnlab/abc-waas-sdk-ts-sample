@@ -1,22 +1,14 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
-import * as react from 'react';
-import react__default from 'react';
+import React, { ReactNode } from 'react';
 
-interface AbcWaasConfig {
+interface AbcWaasConfigType {
     API_WAAS_MYABCWALLET_URL: string;
     MW_MYABCWALLET_URL: string;
     CLIENT_ID: string;
     CLIENT_SECRET: string;
 }
-
-interface Props {
-    config: AbcWaasConfig;
-    children: react__default.ReactNode;
-}
-declare const AbcWaasProvider: ({ config, children }: Props) => react_jsx_runtime.JSX.Element;
-
 interface AbcWaasContextType {
-    config: AbcWaasConfig;
+    config: AbcWaasConfigType;
     basicToken: string | null;
     setBasicToken: (basicToken: string | null) => void;
     email: string | null;
@@ -35,9 +27,16 @@ interface AbcWaasContextType {
     setSecureChannel: (secureChannel: any) => void;
 }
 
+interface Props {
+    config: AbcWaasConfigType;
+    children: ReactNode;
+}
+declare const AbcWaasProvider: ({ config, children }: Props) => react_jsx_runtime.JSX.Element;
+
 declare function useAbcWaas(): AbcWaasContextType;
 
-declare function useSnsLogin(): {
+declare function useLogin(): {
+    config: AbcWaasConfigType;
     basicToken: string | null;
     email: string | null;
     token: string | null;
@@ -46,11 +45,11 @@ declare function useSnsLogin(): {
     abcWallet: any;
     abcUser: any;
     secureChannel: any;
-    snsLoginV2: (email: string, token: string, service: string) => Promise<void>;
+    loginV2: (email: string, token: string, service: string) => Promise<void>;
     loading: boolean;
-    setLoading: react.Dispatch<react.SetStateAction<boolean>>;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     error: Error | null;
-    setError: react.Dispatch<react.SetStateAction<Error | null>>;
+    setError: React.Dispatch<React.SetStateAction<Error | null>>;
 };
 
-export { type AbcWaasConfig, AbcWaasProvider, useAbcWaas, useSnsLogin };
+export { type AbcWaasConfigType, AbcWaasProvider, useAbcWaas, useLogin };

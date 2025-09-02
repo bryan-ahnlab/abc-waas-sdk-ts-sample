@@ -1,13 +1,14 @@
 {
   "version": "v1",
   "packages": {
-    "abc-waas-prebuiltui-sdk": {
-      "signature": "ee29c7bf6b8ab68dba0f8fe76a8b2d51",
+    "abc-waas-core-sdk": {
+      "signature": "7e0aad23c5769381399359b555213fa1",
       "file": true
     },
-    "abc-waas-core-sdk": {
-      "signature": "e4fefa8cf00276c8f86042939b813306",
-      "file": true
+    "abc-waas-prebuiltui-sdk": {
+      "signature": "f85cd9d89bc32708b4779713f6e2ffb0",
+      "file": true,
+      "replaced": "^0.1.5"
     }
   }
 }
