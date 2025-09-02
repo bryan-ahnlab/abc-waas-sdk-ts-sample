@@ -464,14 +464,7 @@ function Login() {
   const location = {
     search: window.location.search,
     hash: window.location.hash};
-  const {
-    loginV2,
-    error: coreError,
-    loading: coreLoading,
-    setLoading: setCoreLoading,
-    service: coreService
-  } = abcWaasCoreSdk.useLogin();
-  const [error, setError] = react.useState(null);
+  const { loginV2, loading, setLoading, error, setError, service } = abcWaasCoreSdk.useLogin();
   const handleRedirect = (provider) => {
     localStorage.setItem("provider", provider);
     if (provider === "google") {
@@ -568,7 +561,7 @@ function Login() {
     async (provider, data) => {
       var _a;
       try {
-        setCoreLoading(true);
+        setLoading(true);
         setError(null);
         if (provider === "google") {
           if (!process.env.REACT_APP_GOOGLE_CLIENT_ID || !process.env.REACT_APP_GOOGLE_CLIENT_SECRET || !process.env.REACT_APP_GOOGLE_REDIRECT_URI) {
@@ -695,17 +688,14 @@ function Login() {
           throw new Error("Invalid provider.");
         }
       } catch (error2) {
-        if (coreError) {
-          setError(coreError);
-        }
         if (error2) {
           setError(error2);
         }
       } finally {
-        setCoreLoading(false);
+        setLoading(false);
       }
     },
-    [loginV2, coreError, navigate]
+    [loginV2, error, navigate]
   );
   react.useEffect(() => {
     const provider = localStorage.getItem("provider");
@@ -787,7 +777,7 @@ function Login() {
         "button",
         {
           onClick: () => handleRedirect(item.type),
-          disabled: coreLoading,
+          disabled: loading,
           style: __spreadProps(__spreadValues({}, buttonBaseStyle), {
             backgroundColor: item.backgroundColor,
             color: item.textColor,
@@ -795,7 +785,7 @@ function Login() {
           }),
           onMouseEnter: (event) => event.currentTarget.style.backgroundColor = item.hoverColor,
           onMouseLeave: (event) => event.currentTarget.style.backgroundColor = item.backgroundColor,
-          children: coreLoading && coreService === item.type ? /* @__PURE__ */ jsxRuntime.jsx(
+          children: loading && service === item.type ? /* @__PURE__ */ jsxRuntime.jsx(
             "img",
             {
               src: animation_loading_default,
@@ -879,6 +869,10 @@ Object.defineProperty(exports, "AbcWaasProvider", {
 Object.defineProperty(exports, "useAbcWaas", {
   enumerable: true,
   get: function () { return abcWaasCoreSdk.useAbcWaas; }
+});
+Object.defineProperty(exports, "useLogin", {
+  enumerable: true,
+  get: function () { return abcWaasCoreSdk.useLogin; }
 });
 exports.Login = Login;
 //# sourceMappingURL=index.js.map
