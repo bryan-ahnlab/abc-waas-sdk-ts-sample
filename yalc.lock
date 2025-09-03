@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "packages": {
+    "abc-waas-prebuiltui-sdk": {
+      "version": "0.2.1",
+      "signature": "477a5464ced4dd02b5d344990480bf79",
+      "file": true,
+      "replaced": "^0.2.1"
+    }
+  }
+}
