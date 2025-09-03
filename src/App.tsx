@@ -81,6 +81,7 @@ function App() {
       {/* ABC WaaS Prebuilt UI SDK */}
       <AbcWaasPrebuiltUIProvider config={AbcWaasPrebuiltUIConfig}>
         <LoginPage />
+        <Information />
       </AbcWaasPrebuiltUIProvider>
       {/* ABC WaaS Prebuilt UI SDK */}
     </>
