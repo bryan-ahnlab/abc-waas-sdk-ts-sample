@@ -8,16 +8,16 @@ import {
 } from "abc-waas-prebuiltui-sdk";
 
 export default function LoginPage() {
-  const { loading, error } = useLogin();
+  const { loginInfo } = useLogin();
 
   useEffect(() => {
-    if (loading) {
-      console.log(loading);
+    if (loginInfo.loading) {
+      console.log(loginInfo.loading);
     }
-  }, [loading]);
+  }, [loginInfo.loading]);
 
-  console.log(error);
-  console.log(loading);
+  console.log(loginInfo.error);
+  console.log(loginInfo.loading);
 
   return <LoginComponent />;
 }

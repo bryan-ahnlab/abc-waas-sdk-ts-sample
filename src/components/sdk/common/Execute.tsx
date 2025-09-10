@@ -48,7 +48,7 @@ const buttonBaseStyle = {
 export default function Execute() {
   const location = useLocation();
 
-  const { loginV2, loading } = useLogin();
+  const { loginV2, loginInfo } = useLogin();
 
   const [email, setEmail] = useState<string | null>(null);
   const [idToken, setIdToken] = useState<string | null>(null);
@@ -114,7 +114,7 @@ export default function Execute() {
 
         <button
           onClick={() => handleLoginV2()}
-          disabled={loading}
+          disabled={loginInfo.loading}
           style={{
             ...buttonBaseStyle,
             backgroundColor: "#000000",

@@ -115,12 +115,7 @@ const buttonBaseStyle = {
 export default function Login() {
   const navigate = useNavigate();
 
-  const {
-    loginV2,
-    loading: loadingSnsLogin,
-    error: errorSnsLogin,
-    service: serviceSnsLogin,
-  } = useLogin();
+  const { loginV2, loginInfo, service: serviceSnsLogin } = useLogin();
 
   const handleRedirect = async (provider: Providers) => {
     localStorage.setItem("provider", provider);
@@ -179,7 +174,7 @@ export default function Login() {
           <button
             key={item.type}
             onClick={() => handleRedirect(item.type)}
-            disabled={loadingSnsLogin}
+            disabled={loginInfo.loading}
             style={{
               ...buttonBaseStyle,
               backgroundColor: item.backgroundColor,
@@ -193,7 +188,7 @@ export default function Login() {
               (event.currentTarget.style.backgroundColor = item.backgroundColor)
             }
           >
-            {loadingSnsLogin && serviceSnsLogin === item.type ? (
+            {loginInfo.loading && serviceSnsLogin === item.type ? (
               <img
                 src={LoadingAnimation}
                 alt="loading"
@@ -216,7 +211,7 @@ export default function Login() {
           </button>
         ))}
 
-        {errorSnsLogin?.message && (
+        {loginInfo.error?.message && (
           <span
             style={{
               color: "red",
@@ -225,7 +220,7 @@ export default function Login() {
               width: "100%",
             }}
           >
-            {errorSnsLogin.message}
+            {loginInfo.error?.message}
           </span>
         )}
       </div>

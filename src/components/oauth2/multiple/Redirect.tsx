@@ -107,7 +107,7 @@ const buttonBaseStyle = {
 } as const;
 
 export default function Redirect() {
-  const { loading } = useLogin();
+  const { loginInfo } = useLogin();
 
   const handleRedirect = (provider: Providers) => {
     localStorage.setItem("provider", provider);
@@ -246,7 +246,7 @@ export default function Redirect() {
           <button
             key={item.type}
             onClick={() => handleRedirect(item.type as Providers)}
-            disabled={loading}
+            disabled={loginInfo.loading}
             style={{
               ...buttonBaseStyle,
               backgroundColor: item.backgroundColor,

@@ -1,6 +1,6 @@
 {
   "name": "abc-waas-core-sdk",
-  "version": "0.1.8",
+  "version": "0.2.5",
   "description": "ABC WaaS Core SDK for React/Next.js",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -26,14 +26,6 @@
   ],
   "author": "dev.pyoungwoo@gmail.com",
   "license": "MIT",
-  "devDependencies": {
-    "@types/crypto-js": "^4.2.2",
-    "@types/memory-cache": "^0.2.6",
-    "@types/qs": "^6.14.0",
-    "@types/react": "^18.0.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.7.3"
-  },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
@@ -44,5 +36,6 @@
     "crypto-js": "^4.2.0",
     "memory-cache": "^0.2.0",
     "qs": "^6.14.0"
-  }
+  },
+  "yalcSig": "053578e481426e6e7cebc88012ce7ab6"
 }

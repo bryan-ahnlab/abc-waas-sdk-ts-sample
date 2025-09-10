@@ -129,11 +129,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {
-    loginV2,
-    error: errorSnsLogin,
-    service: serviceSnsLogin,
-  } = useLogin();
+  const { loginV2, loginInfo, service: serviceSnsLogin } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -448,8 +444,8 @@ export default function Login() {
           throw new Error("Invalid provider.");
         }
       } catch (error: any) {
-        if (errorSnsLogin) {
-          setError(errorSnsLogin);
+        if (loginInfo.error) {
+          setError(loginInfo.error);
         }
         if (error) {
           setError(error);
@@ -458,7 +454,7 @@ export default function Login() {
         setLoading(false);
       }
     },
-    [loginV2, errorSnsLogin, navigate]
+    [loginV2, loginInfo, navigate]
   );
 
   useEffect(() => {

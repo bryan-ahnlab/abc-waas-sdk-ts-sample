@@ -107,7 +107,7 @@ const buttonBaseStyle = {
 } as const;
 
 export default function Redirect() {
-  const { loading: loadingSnsLogin } = useLogin();
+  const { loginInfo } = useLogin();
 
   const handleRedirect = async (provider: Providers) => {
     localStorage.setItem("provider", provider);
@@ -138,7 +138,7 @@ export default function Redirect() {
           <button
             key={item.type}
             onClick={() => handleRedirect(item.type)}
-            disabled={loadingSnsLogin}
+            disabled={loginInfo.loading}
             style={{
               ...buttonBaseStyle,
               backgroundColor: item.backgroundColor,

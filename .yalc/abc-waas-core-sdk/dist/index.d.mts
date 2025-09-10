@@ -1,5 +1,5 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 interface AbcWaasConfigType {
     API_WAAS_MYABCWALLET_URL: string;
@@ -7,6 +7,13 @@ interface AbcWaasConfigType {
     CLIENT_ID: string;
     CLIENT_SECRET: string;
 }
+
+interface Props {
+    config: AbcWaasConfigType;
+    children: ReactNode;
+}
+declare const AbcWaasProvider: ({ config, children }: Props) => react_jsx_runtime.JSX.Element;
+
 interface AbcWaasContextType {
     config: AbcWaasConfigType;
     basicToken: string | null;
@@ -25,17 +32,10 @@ interface AbcWaasContextType {
     setAbcUser: (abcUser: any) => void;
     secureChannel: any;
     setSecureChannel: (secureChannel: any) => void;
-    loading: boolean;
-    setLoading: (loading: boolean) => void;
-    error: Error | null;
-    setError: (error: Error | null) => void;
 }
 
-interface Props {
-    config: AbcWaasConfigType;
-    children: ReactNode;
-}
-declare const AbcWaasProvider: ({ config, children }: Props) => react_jsx_runtime.JSX.Element;
+type UseLoginStatusType = "IDLE" | "LOADING" | "SUCCESS" | "FAILURE";
+type UseLogoutStatusType = "IDLE" | "LOADING" | "SUCCESS" | "FAILURE";
 
 declare function useAbcWaas(): AbcWaasContextType;
 
@@ -51,9 +51,21 @@ declare function useLogin(): {
     secureChannel: any;
     loginV2: (email: string, token: string, service: string) => Promise<void>;
     loading: boolean;
-    setLoading: (loading: boolean) => void;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     error: Error | null;
-    setError: (error: Error | null) => void;
+    setError: React.Dispatch<React.SetStateAction<Error | null>>;
+    status: UseLoginStatusType | null;
+    setStatus: React.Dispatch<React.SetStateAction<UseLoginStatusType | null>>;
 };
 
-export { type AbcWaasConfigType, AbcWaasProvider, useAbcWaas, useLogin };
+declare function useLogout(): {
+    logoutV2: () => Promise<void>;
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    error: Error | null;
+    setError: React.Dispatch<React.SetStateAction<Error | null>>;
+    status: UseLogoutStatusType | null;
+    setStatus: React.Dispatch<React.SetStateAction<UseLogoutStatusType | null>>;
+};
+
+export { type AbcWaasConfigType, type AbcWaasContextType, AbcWaasProvider, type UseLoginStatusType, type UseLogoutStatusType, useAbcWaas, useLogin, useLogout };

@@ -2,8 +2,21 @@
 
 [![npm version](https://badge.fury.io/js/abc-waas-prebuiltui-sdk.svg)](https://badge.fury.io/js/abc-waas-prebuiltui-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18+-61dafb.svg)](https://reactjs.org/)
 
 ABC WaaS SDK를 위한 미리 만들어진 UI 컴포넌트 라이브러리입니다. `abc-waas-core-sdk`의 모든 기능을 포함하며, 별도로 `abc-waas-core-sdk`를 설치할 필요가 없습니다.
+
+## ✨ 주요 기능
+
+- 🔐 **5개 소셜 로그인 지원**: Google, Apple, Naver, Kakao, LINE
+- 🎨 **완성된 UI 컴포넌트**: 별도 스타일링 없이 바로 사용 가능
+- 📱 **반응형 디자인**: 모바일과 데스크톱 모두 지원
+- 🚀 **TypeScript 지원**: 완벽한 타입 안전성
+- 🔧 **간편한 설정**: 환경 변수만으로 모든 기능 사용 가능
+- 📦 **번들 최적화**: Tree shaking과 코드 분할 지원
+- 🌐 **크로스 브라우저 호환성**: 모든 브라우저에서 안전하게 작동
+- 🔒 **보안 강화**: 암호학적으로 안전한 UUID 생성
 
 ## 📋 목차
 
@@ -15,6 +28,7 @@ ABC WaaS SDK를 위한 미리 만들어진 UI 컴포넌트 라이브러리입니
 - [지원하는 소셜 서비스](#지원하는-소셜-서비스)
 - [아키텍처](#아키텍처)
 - [개발 가이드](#개발-가이드)
+- [문제 해결](#문제-해결)
 - [라이선스](#라이선스)
 
 ## 🚀 설치
@@ -29,6 +43,12 @@ npm install abc-waas-prebuiltui-sdk
 yarn add abc-waas-prebuiltui-sdk
 ```
 
+또는
+
+```bash
+pnpm add abc-waas-prebuiltui-sdk
+```
+
 ## ⚡ 빠른 시작
 
 ### 1. 환경 변수 설정
@@ -36,17 +56,13 @@ yarn add abc-waas-prebuiltui-sdk
 프로젝트 루트에 `.env` 파일을 생성하고 다음 환경 변수를 설정하세요:
 
 ```env
-# ABC WaaS API (Optional)
-REACT_APP_REDIRECT_URI=http://localhost:3000
-
-# ABC WaaS Config
+# ABC WaaS API (Required)
 REACT_APP_API_WAAS_MYABCWALLET_URI=https://dev-api.waas.myabcwallet.com
 REACT_APP_MW_MYABCWALLET_URI=https://mw.myabcwallet.com
-
 REACT_APP_CLIENT_ID=your_client_id_here
 REACT_APP_CLIENT_SECRET=your_client_secret_here
 
-# OAuth2
+# OAuth2 Providers
 REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id_here
 REACT_APP_GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 REACT_APP_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=google
@@ -335,12 +351,6 @@ const {
 | `REACT_APP_CLIENT_ID`                | ABC WaaS 클라이언트 ID     | `your_client_id_here`                  |
 | `REACT_APP_CLIENT_SECRET`            | ABC WaaS 클라이언트 시크릿 | `your_client_secret_here`              |
 
-### 선택적 환경 변수
-
-| 변수명                   | 설명                | 예시                    |
-| ------------------------ | ------------------- | ----------------------- |
-| `REACT_APP_REDIRECT_URI` | 기본 리다이렉트 URI | `http://localhost:3000` |
-
 ### OAuth2 Provider 환경 변수
 
 #### Google
@@ -386,23 +396,24 @@ REACT_APP_LINE_REDIRECT_URI=http://localhost:3000/auth/signin?provider=line
 
 ## 🌐 지원하는 소셜 서비스
 
-| 서비스     | OAuth 버전 | 지원 기능      | 아이콘 |
-| ---------- | ---------- | -------------- | ------ |
-| **Google** | OAuth 2.0  | 이메일, 프로필 | ✅     |
-| **Apple**  | OAuth 2.0  | 이메일, 이름   | ✅     |
-| **Naver**  | OAuth 2.0  | 이메일, 프로필 | ✅     |
-| **Kakao**  | OAuth 2.0  | 이메일, 프로필 | ✅     |
-| **LINE**   | OAuth 2.0  | 이메일, 프로필 | ✅     |
+| 서비스     | OAuth 버전 | 지원 기능      | 아이콘 | 상태 |
+| ---------- | ---------- | -------------- | ------ | ---- |
+| **Google** | OAuth 2.0  | 이메일, 프로필 | ✅     | 🟢   |
+| **Apple**  | OAuth 2.0  | 이메일, 이름   | ✅     | 🟢   |
+| **Naver**  | OAuth 2.0  | 이메일, 프로필 | ✅     | 🟢   |
+| **Kakao**  | OAuth 2.0  | 이메일, 프로필 | ✅     | 🟢   |
+| **LINE**   | OAuth 2.0  | 이메일, 프로필 | ✅     | 🟢   |
 
 ## 🏗️ 아키텍처
 
 ```
 abc-waas-prebuiltui-sdk/
 ├── src/
-│   ├── index.ts                 # 메인 진입점
+│   ├── index.ts                 # 메인 진입점 및 export
 │   ├── components/
 │   │   └── Login.tsx            # 소셜 로그인 UI 컴포넌트
 │   ├── utilities/
+│   │   ├── common.ts            # UUID 생성 및 공통 유틸리티
 │   │   ├── google.ts            # Google OAuth 유틸리티
 │   │   ├── apple.ts             # Apple OAuth 유틸리티
 │   │   ├── naver.ts             # Naver OAuth 유틸리티
@@ -430,6 +441,16 @@ abc-waas-prebuiltui-sdk
 ├── useAbcWaas (Core SDK 훅 재export)
 └── AbcWaasConfigType (설정 타입)
 ```
+
+### 기술 스택
+
+- **언어**: TypeScript 5.7.3
+- **프레임워크**: React 18+
+- **빌드 도구**: tsup
+- **패키지 관리**: npm/yarn/pnpm
+- **코어 SDK**: abc-waas-core-sdk
+- **암호화**: jose
+- **UUID 생성**: 크로스 브라우저 호환성을 위해 폴백 시스템 구현
 
 ## 🛠️ 개발 가이드
 
@@ -466,6 +487,8 @@ npm run build
 2. **타입 안전성**: TypeScript를 사용하여 타입 안전성 보장
 3. **번들 크기**: React는 external로 설정하여 번들 크기 최적화
 4. **호환성**: React 18+ 지원
+5. **SVG 파일**: assets 폴더의 SVG 파일들은 자동으로 dist로 복사됩니다
+6. **UUID 생성**: 크로스 브라우저 호환성을 위해 폴백 시스템 구현
 
 ### 테스트
 
@@ -487,6 +510,109 @@ npm run build
 npm publish
 ```
 
+## 🔍 문제 해결
+
+### 일반적인 문제들
+
+#### 1. OAuth 리다이렉트 오류
+
+**문제**: OAuth 인증 후 리다이렉트가 제대로 작동하지 않음
+
+**해결 방법**:
+
+- 환경 변수의 리다이렉트 URI가 정확한지 확인
+- OAuth Provider 설정에서 리다이렉트 URI가 등록되어 있는지 확인
+- 브라우저 콘솔에서 에러 메시지 확인
+
+#### 2. 타입 에러
+
+**문제**: TypeScript 컴파일 에러
+
+**해결 방법**:
+
+```bash
+# 타입 체크
+npx tsc --noEmit
+
+# 의존성 재설치
+rm -rf node_modules package-lock.json
+npm install
+```
+
+#### 3. 빌드 실패
+
+**문제**: `npm run build` 실행 시 에러
+
+**해결 방법**:
+
+```bash
+# 캐시 정리
+npm run build -- --clean
+
+# TypeScript 설정 확인
+npx tsc --showConfig
+```
+
+#### 4. 환경 변수 인식 안됨
+
+**문제**: 환경 변수가 제대로 로드되지 않음
+
+**해결 방법**:
+
+- `.env` 파일이 프로젝트 루트에 있는지 확인
+- 환경 변수명이 `REACT_APP_`으로 시작하는지 확인
+- 개발 서버 재시작
+
+#### 5. 모바일 브라우저에서 crypto.randomUUID 오류
+
+**문제**: 모바일 브라우저에서 `crypto.randomUUID is not a function` 에러 발생
+
+**해결 방법**:
+
+- SDK v0.2.6+ 버전 사용 (자동으로 해결됨)
+- 또는 수동으로 UUID 유틸리티 함수 사용:
+
+```typescript
+import { generateUUID } from "abc-waas-prebuiltui-sdk";
+
+// crypto.randomUUID() 대신 사용
+const state = generateUUID();
+```
+
+#### 6. UUID 생성 실패
+
+**문제**: UUID 생성이 제대로 작동하지 않음
+
+**해결 방법**:
+
+```typescript
+import { generateUUID } from "abc-waas-prebuiltui-sdk";
+
+// 브라우저 환경 진단
+console.log("crypto 지원:", typeof crypto !== "undefined");
+console.log("randomUUID 지원:", typeof crypto?.randomUUID !== "undefined");
+console.log(
+  "getRandomValues 지원:",
+  typeof crypto?.getRandomValues !== "undefined"
+);
+
+// UUID 생성 테스트
+try {
+  const uuid = generateUUID();
+  console.log("생성된 UUID:", uuid);
+} catch (error) {
+  console.error("UUID 생성 실패:", error);
+}
+```
+
+### 디버깅 팁
+
+1. **브라우저 콘솔**: OAuth 에러와 네트워크 요청 확인
+2. **환경 변수**: `console.log(process.env)`로 확인
+3. **네트워크 탭**: OAuth 요청/응답 확인
+4. **로컬 스토리지**: OAuth state 값 확인
+5. **UUID 생성**: `generateUUID()` 함수의 각 단계별 동작 확인
+
 ## 🤝 기여하기
 
 1. Fork the Project
@@ -494,6 +620,13 @@ npm publish
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+### 기여 가이드라인
+
+- 코드 스타일: Prettier + ESLint 준수
+- 커밋 메시지: Conventional Commits 형식
+- 테스트: 새로운 기능에 대한 테스트 코드 작성
+- 문서: API 변경 시 README 업데이트
 
 ## 📄 라이선스
 
@@ -503,14 +636,43 @@ npm publish
 
 - **이메일**: dev.pyoungwoo@gmail.com
 - **GitHub Issues**: [이슈 등록](https://github.com/your-repo/issues)
+- **문서**: [API 문서](https://docs.example.com)
 
 ## 🔄 변경 로그
 
-### v0.1.1
+### v0.2.6 (현재)
 
+- **모바일 브라우저 호환성 대폭 개선**: `crypto.randomUUID` 폴백 시스템 구현
+- **UUID 유틸리티 추가**: `generateUUID()` 함수로 크로스 브라우저 호환성 보장
+- **3단계 폴백 시스템**: crypto.randomUUID → crypto.getRandomValues → Math.random
+- **에러 처리 강화**: 각 단계별 try-catch로 안정성 향상
+- **TypeScript 5.7.3** 지원
+- **React 18+** 호환성 개선
+- **번들 최적화** 및 Tree shaking 개선
+- **SVG 파일 처리** 개선
+
+### v0.2.5
+
+- 모바일 브라우저 호환성 개선
+- UUID 유틸리티 추가
+
+### v0.2.4
+
+- TypeScript 5.7.3 지원
+- React 18+ 호환성 개선
+- 번들 최적화 및 Tree shaking 개선
+- SVG 파일 처리 개선
+
+### v0.2.2
+
+- Core SDK 의존성 업데이트
+- 성능 최적화
+
+### v0.2.0
+
+- 새로운 아키텍처 적용
 - Core SDK Provider 래핑 구조로 변경
 - 불필요한 상태 동기화 로직 제거
-- 성능 최적화
 
 ### v0.1.0
 
@@ -518,6 +680,34 @@ npm publish
 - 기본 소셜 로그인 기능 구현
 - 5개 소셜 서비스 지원 (Google, Apple, Naver, Kakao, LINE)
 
+## 🚀 로드맵
+
+- [ ] **v0.3.0**: 추가 소셜 로그인 Provider 지원
+- [ ] **v0.4.0**: 테마 커스터마이징 기능
+- [ ] **v0.5.0**: 다국어 지원
+- [ ] **v1.0.0**: 안정화 및 프로덕션 준비
+
+## 🔒 보안 및 호환성
+
+### UUID 생성 보안 수준
+
+| 단계      | 방법                       | 보안 수준     | 지원 브라우저                                 |
+| --------- | -------------------------- | ------------- | --------------------------------------------- |
+| **1단계** | `crypto.randomUUID()`      | 🔒🔒🔒 (최고) | Chrome 92+, Firefox 95+, Safari 15+, Edge 92+ |
+| **2단계** | `crypto.getRandomValues()` | 🔒🔒 (높음)   | 대부분의 현대 브라우저                        |
+| **3단계** | `Math.random()`            | 🔒 (낮음)     | 모든 브라우저                                 |
+
+### 브라우저 호환성
+
+- **데스크톱**: Chrome, Firefox, Safari, Edge (모든 버전)
+- **모바일**: iOS Safari, Android Chrome, Samsung Internet
+- **WebView**: Android WebView, iOS WKWebView
+- **구형 브라우저**: IE 11+ (제한적 기능)
+
 ---
 
 **ABC WaaS Prebuilt UI SDK** - ABC WaaS를 위한 완벽한 소셜 로그인 솔루션 🚀
+
+> 💡 **팁**: 이 SDK는 `abc-waas-core-sdk`의 모든 기능을 포함하고 있어 별도 설치가 필요하지 않습니다!
+>
+> 🔒 **보안**: 크로스 브라우저 호환성을 위한 3단계 폴백 시스템으로 모든 환경에서 안전하게 작동합니다!

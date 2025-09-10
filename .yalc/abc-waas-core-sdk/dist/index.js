@@ -1,10 +1,18 @@
-import { createContext, useState, useCallback, useMemo, useContext } from 'react';
-import { jsx } from 'react/jsx-runtime';
-import { p256 } from '@noble/curves/p256';
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import CryptoJS from 'crypto-js';
-import qs from 'qs';
-import mCache from 'memory-cache';
+'use strict';
+
+var react = require('react');
+var jsxRuntime = require('react/jsx-runtime');
+var p256 = require('@noble/curves/p256');
+var utils = require('@noble/hashes/utils');
+var CryptoJS = require('crypto-js');
+var qs = require('qs');
+var mCache = require('memory-cache');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
+
+var CryptoJS__default = /*#__PURE__*/_interopDefault(CryptoJS);
+var qs__default = /*#__PURE__*/_interopDefault(qs);
+var mCache__default = /*#__PURE__*/_interopDefault(mCache);
 
 var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
@@ -22,49 +30,49 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
-var AbcWaasContext = createContext(null);
+var AbcWaasContext = react.createContext(null);
 var AbcWaasProvider = ({ config, children }) => {
-  const [basicToken, setBasicTokenState] = useState(null);
-  const [email, setEmailState] = useState(null);
-  const [token, setTokenState] = useState(null);
-  const [service, setServiceState] = useState(null);
-  const [abcAuth, setAbcAuthState] = useState(null);
-  const [abcWallet, setAbcWalletState] = useState(null);
-  const [abcUser, setAbcUserState] = useState(null);
-  const [secureChannel, setSecureChannelState] = useState(null);
-  const [loading, setLoadingState] = useState(false);
-  const [error, setErrorState] = useState(null);
-  const setBasicToken = useCallback((basicToken2) => {
+  const [basicToken, setBasicTokenState] = react.useState(null);
+  const [email, setEmailState] = react.useState(null);
+  const [token, setTokenState] = react.useState(null);
+  const [service, setServiceState] = react.useState(null);
+  const [abcAuth, setAbcAuthState] = react.useState(null);
+  const [abcWallet, setAbcWalletState] = react.useState(null);
+  const [abcUser, setAbcUserState] = react.useState(null);
+  const [secureChannel, setSecureChannelState] = react.useState(null);
+  const [loading, setLoadingState] = react.useState(false);
+  const [error, setErrorState] = react.useState(null);
+  const setBasicToken = react.useCallback((basicToken2) => {
     setBasicTokenState(basicToken2);
   }, []);
-  const setEmail = useCallback((email2) => {
+  const setEmail = react.useCallback((email2) => {
     setEmailState(email2);
   }, []);
-  const setToken = useCallback((token2) => {
+  const setToken = react.useCallback((token2) => {
     setTokenState(token2);
   }, []);
-  const setService = useCallback((service2) => {
+  const setService = react.useCallback((service2) => {
     setServiceState(service2);
   }, []);
-  const setAbcAuth = useCallback((abcAuth2) => {
+  const setAbcAuth = react.useCallback((abcAuth2) => {
     setAbcAuthState(abcAuth2);
   }, []);
-  const setAbcWallet = useCallback((abcWallet2) => {
+  const setAbcWallet = react.useCallback((abcWallet2) => {
     setAbcWalletState(abcWallet2);
   }, []);
-  const setAbcUser = useCallback((abcUser2) => {
+  const setAbcUser = react.useCallback((abcUser2) => {
     setAbcUserState(abcUser2);
   }, []);
-  const setSecureChannel = useCallback((secureChannel2) => {
+  const setSecureChannel = react.useCallback((secureChannel2) => {
     setSecureChannelState(secureChannel2);
   }, []);
-  const setLoading = useCallback((loading2) => {
+  const setLoading = react.useCallback((loading2) => {
     setLoadingState(loading2);
   }, []);
-  const setError = useCallback((error2) => {
+  const setError = react.useCallback((error2) => {
     setErrorState(error2);
   }, []);
-  const abcAuthState = useMemo(
+  const abcAuthState = react.useMemo(
     () => ({
       basicToken,
       setBasicToken,
@@ -73,7 +81,7 @@ var AbcWaasProvider = ({ config, children }) => {
     }),
     [basicToken, abcAuth, setBasicToken, setAbcAuth]
   );
-  const abcWalletState = useMemo(
+  const abcWalletState = react.useMemo(
     () => ({
       abcWallet,
       setAbcWallet,
@@ -82,7 +90,7 @@ var AbcWaasProvider = ({ config, children }) => {
     }),
     [abcWallet, abcUser, setAbcWallet, setAbcUser]
   );
-  const abcUserState = useMemo(
+  const abcUserState = react.useMemo(
     () => ({
       email,
       setEmail,
@@ -93,28 +101,28 @@ var AbcWaasProvider = ({ config, children }) => {
     }),
     [email, token, service, setEmail, setToken, setService]
   );
-  const secureChannelState = useMemo(
+  const secureChannelState = react.useMemo(
     () => ({
       secureChannel,
       setSecureChannel
     }),
     [secureChannel, setSecureChannel]
   );
-  const loadingState = useMemo(
+  const loadingState = react.useMemo(
     () => ({
       loading,
       setLoading
     }),
     [loading, setLoading]
   );
-  const errorState = useMemo(
+  const errorState = react.useMemo(
     () => ({
       error,
       setError
     }),
     [error, setError]
   );
-  const contextValue = useMemo(
+  const contextValue = react.useMemo(
     () => __spreadValues(__spreadValues(__spreadValues(__spreadValues(__spreadValues(__spreadValues({
       config
     }, abcAuthState), abcWalletState), abcUserState), secureChannelState), loadingState), errorState),
@@ -128,10 +136,10 @@ var AbcWaasProvider = ({ config, children }) => {
       errorState
     ]
   );
-  return /* @__PURE__ */ jsx(AbcWaasContext.Provider, { value: contextValue, children });
+  return /* @__PURE__ */ jsxRuntime.jsx(AbcWaasContext.Provider, { value: contextValue, children });
 };
 function useAbcWaas() {
-  const context = useContext(AbcWaasContext);
+  const context = react.useContext(AbcWaasContext);
   if (!context) {
     throw new Error("Not found AbcWaasContext");
   }
@@ -165,8 +173,8 @@ async function createSecureChannel(config) {
   try {
     const keyPair = createKeypair();
     const message = "AhnLab Blockchain Company";
-    const formData = qs.stringify({
-      pubkey: bytesToHex(keyPair.publicKey),
+    const formData = qs__default.default.stringify({
+      pubkey: utils.bytesToHex(keyPair.publicKey),
       plain: message
     });
     const response = await fetch(
@@ -180,19 +188,19 @@ async function createSecureChannel(config) {
     if (!response.ok)
       throw new Error(`Failed to create secure channel: ${response.status}`);
     const responseData = await parseJson(response, "createSecureChannel");
-    const serverPubkey = hexToBytes(responseData.publickey);
-    const shared = p256.getSharedSecret(keyPair.privateKey, serverPubkey);
+    const serverPubkey = utils.hexToBytes(responseData.publickey);
+    const shared = p256.p256.getSharedSecret(keyPair.privateKey, serverPubkey);
     const sharedX = shared.slice(1, 33);
-    const secretKey = bytesToHex(sharedX).padStart(64, "0");
+    const secretKey = utils.bytesToHex(sharedX).padStart(64, "0");
     const result = {
       ChannelID: responseData.channelid,
       Encrypted: responseData.encrypted,
       ServerPublicKey: responseData.publickey,
       Message: message,
-      PrivateKey: bytesToHex(keyPair.privateKey),
+      PrivateKey: utils.bytesToHex(keyPair.privateKey),
       SecretKey: secretKey
     };
-    mCache.put(
+    mCache__default.default.put(
       "secureChannel",
       { data: responseData, keyPair, secretKey },
       30 * 60 * 1e3
@@ -206,8 +214,8 @@ async function createSecureChannel(config) {
   }
 }
 function createKeypair() {
-  const privateKey = p256.utils.randomPrivateKey();
-  const publicKey = p256.getPublicKey(privateKey, false);
+  const privateKey = p256.p256.utils.randomPrivateKey();
+  const publicKey = p256.p256.getPublicKey(privateKey, false);
   return { privateKey, publicKey };
 }
 var randomPassword = () => {
@@ -220,18 +228,18 @@ var randomPassword = () => {
   return password;
 };
 var encryptedPassword = (secret) => {
-  const key = CryptoJS.enc.Hex.parse(secret.substring(0, 32)).toString(CryptoJS.enc.Hex).substring(0, 32);
-  const iv = CryptoJS.enc.Hex.parse(secret.substring(AES_KEY_LENGTH));
-  const encrypted = CryptoJS.AES.encrypt(
+  const key = CryptoJS__default.default.enc.Hex.parse(secret.substring(0, 32)).toString(CryptoJS__default.default.enc.Hex).substring(0, 32);
+  const iv = CryptoJS__default.default.enc.Hex.parse(secret.substring(AES_KEY_LENGTH));
+  const encrypted = CryptoJS__default.default.AES.encrypt(
     randomPassword(),
-    CryptoJS.enc.Hex.parse(key),
+    CryptoJS__default.default.enc.Hex.parse(key),
     {
       iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
+      mode: CryptoJS__default.default.mode.CBC,
+      padding: CryptoJS__default.default.pad.Pkcs7
     }
   );
-  return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+  return encrypted.ciphertext.toString(CryptoJS__default.default.enc.Base64);
 };
 
 // src/api/v2/auth.ts
@@ -322,17 +330,17 @@ function useLogin() {
     abcUser,
     setAbcUser,
     secureChannel,
-    setSecureChannel,
-    loading,
-    setLoading,
-    error,
-    setError
+    setSecureChannel
   } = useAbcWaas();
-  const loginV2 = useCallback(
+  const [loading, setLoading] = react.useState(false);
+  const [error, setError] = react.useState(null);
+  const [status, setStatus] = react.useState(null);
+  const loginV2 = react.useCallback(
     async (email2, token2, service2) => {
       try {
         setLoading(true);
         setError(null);
+        setStatus("LOADING");
         setEmail(email2);
         setToken(token2);
         setService(service2);
@@ -359,15 +367,16 @@ function useLogin() {
             sixcode,
             token: newToken
           } = JSON.parse(tryLoginData.msg);
-          const joinRes = await postMemberJoinV2(
+          const joinMember = await postMemberJoinV2(
             config,
             basicToken2,
             email3,
             sixcode,
             service2
           );
-          if (!(joinRes == null ? void 0 : joinRes.ok)) {
-            throw new Error(JSON.stringify(joinRes));
+          if (!(joinMember == null ? void 0 : joinMember.ok)) {
+            setStatus("FAILURE");
+            throw new Error(JSON.stringify(joinMember));
           }
           const retryLogin = await postTokenLoginV2(
             config,
@@ -380,11 +389,15 @@ function useLogin() {
             "postTokenLoginV2"
           );
           if (!retryLogin.ok) {
+            setStatus("FAILURE");
             throw new Error(JSON.stringify(retryLoginData));
           }
           accessToken = retryLoginData.access_token;
           setAbcAuth(retryLoginData);
           sessionStorage.setItem("abcAuth", JSON.stringify(retryLoginData));
+        } else if (!tryLogin.ok) {
+          setStatus("FAILURE");
+          throw new Error(JSON.stringify(tryLoginData));
         }
         const channelid = secureChannel2.ChannelID;
         const secretKey = secureChannel2.SecretKey;
@@ -401,9 +414,11 @@ function useLogin() {
           "postMpcWalletsV2"
         );
         if (!createMpcWallets.ok) {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(createMpcWalletsData));
         }
         if (createMpcWalletsData.message === "The token was expected to have 3 parts, but got 1.") {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(createMpcWalletsData));
         }
         setAbcWallet(createMpcWalletsData);
@@ -417,28 +432,36 @@ function useLogin() {
           "getMpcWalletsInfoV2"
         );
         if (!mpcWalletsInfo.ok) {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(mpcWalletsInfoData));
         }
         if (mpcWalletsInfoData.message === "The token was expected to have 3 parts, but got 1.") {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(mpcWalletsInfoData));
         }
         if (mpcWalletsInfoData.message === "MPC KeyShare Recover Error") {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(mpcWalletsInfoData));
         }
         if (mpcWalletsInfoData.message === "KeyShare generate failed.") {
+          setStatus("FAILURE");
           throw new Error(JSON.stringify(mpcWalletsInfoData));
         }
         setAbcUser(mpcWalletsInfoData);
         sessionStorage.setItem("abcUser", JSON.stringify(mpcWalletsInfoData));
+        setStatus("SUCCESS");
         return;
       } catch (error2) {
         setError(error2);
+        if (status !== "FAILURE") {
+          setStatus("FAILURE");
+        }
         throw error2;
       } finally {
         setLoading(false);
       }
     },
-    [config]
+    [config, status]
   );
   return {
     config,
@@ -454,10 +477,74 @@ function useLogin() {
     loading,
     setLoading,
     error,
-    setError
+    setError,
+    status,
+    setStatus
+  };
+}
+function useLogout() {
+  const {
+    setBasicToken,
+    setEmail,
+    setToken,
+    setService,
+    setAbcAuth,
+    setAbcWallet,
+    setAbcUser,
+    setSecureChannel
+  } = useAbcWaas();
+  const [loading, setLoading] = react.useState(false);
+  const [error, setError] = react.useState(null);
+  const [status, setStatus] = react.useState(null);
+  const logoutV2 = react.useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setStatus("LOADING");
+      sessionStorage.removeItem("abcAuth");
+      sessionStorage.removeItem("abcWallet");
+      sessionStorage.removeItem("abcUser");
+      sessionStorage.removeItem("secureChannel");
+      setBasicToken(null);
+      setEmail(null);
+      setToken(null);
+      setService(null);
+      setAbcAuth(null);
+      setAbcWallet(null);
+      setAbcUser(null);
+      setSecureChannel(null);
+      setStatus("SUCCESS");
+    } catch (error2) {
+      setError(error2);
+      setStatus("FAILURE");
+      throw error2;
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    setBasicToken,
+    setEmail,
+    setToken,
+    setService,
+    setAbcAuth,
+    setAbcWallet,
+    setAbcUser,
+    setSecureChannel
+  ]);
+  return {
+    logoutV2,
+    loading,
+    setLoading,
+    error,
+    setError,
+    status,
+    setStatus
   };
 }
 
-export { AbcWaasProvider, useAbcWaas, useLogin };
-//# sourceMappingURL=index.mjs.map
-//# sourceMappingURL=index.mjs.map
+exports.AbcWaasProvider = AbcWaasProvider;
+exports.useAbcWaas = useAbcWaas;
+exports.useLogin = useLogin;
+exports.useLogout = useLogout;
+//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.js.map

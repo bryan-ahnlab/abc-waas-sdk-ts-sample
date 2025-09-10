@@ -59,11 +59,7 @@ const statusBaseStyle = {
 export default function Callback() {
   const navigate = useNavigate();
 
-  const {
-    loginV2,
-    loading: loadingSnsLogin,
-    error: errorSnsLogin,
-  } = useLogin();
+  const { loginV2, loginInfo } = useLogin();
 
   const handleCallback = useCallback(
     async (email: string, idToken: string, service: string) => {
@@ -105,16 +101,16 @@ export default function Callback() {
       </div>
 
       <div style={contentContainerStyle}>
-        {(loadingSnsLogin || errorSnsLogin?.message) && (
+        {(loginInfo.loading || loginInfo.error?.message) && (
           <div style={statusBaseStyle}>
-            {loadingSnsLogin && (
+            {loginInfo.loading && (
               <img
                 src={LoadingAnimation}
                 alt="loading"
                 style={{ width: "24px", height: "24px" }}
               />
             )}
-            {errorSnsLogin?.message && (
+            {loginInfo.error?.message && (
               <span
                 style={{
                   color: "red",
@@ -123,7 +119,7 @@ export default function Callback() {
                   width: "100%",
                 }}
               >
-                {errorSnsLogin.message}
+                {loginInfo.error?.message}
               </span>
             )}
           </div>

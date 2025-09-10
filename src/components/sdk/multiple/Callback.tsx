@@ -70,7 +70,7 @@ export default function Callback() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { error: errorSnsLogin, loginV2 } = useLogin();
+  const { loginInfo } = useLogin();
 
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -241,8 +241,8 @@ export default function Callback() {
           throw new Error("Invalid provider.");
         }
       } catch (error: any) {
-        if (errorSnsLogin) {
-          setError(errorSnsLogin);
+        if (loginInfo.error) {
+          setError(loginInfo.error);
         }
         if (error) {
           setError(error);
@@ -251,7 +251,7 @@ export default function Callback() {
         setLoading(false);
       }
     },
-    [errorSnsLogin, navigate]
+    [loginInfo, navigate]
   );
 
   useEffect(() => {
