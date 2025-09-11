@@ -7,9 +7,9 @@
       "replaced": "^0.2.6"
     },
     "abc-waas-prebuiltui-sdk": {
-      "signature": "37e001d5cb2f35a4e83b3fbce189496a",
+      "signature": "ec4d8cf862b74f8bb29bc7b229d2ac5a",
       "file": true,
-      "replaced": "^0.2.8"
+      "replaced": "^0.2.12"
     }
   }
 }

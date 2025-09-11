@@ -3,21 +3,27 @@
 import React, { useEffect } from "react";
 import {
   Login as LoginComponent,
-  useAbcWaas,
+  Logout as LogoutComponent,
   useLogin,
+  useLogout,
 } from "abc-waas-prebuiltui-sdk";
 
 export default function LoginPage() {
   const { loginInfo } = useLogin();
+  const { logoutInfo } = useLogout();
 
   useEffect(() => {
-    if (loginInfo.loading) {
-      console.log(loginInfo.loading);
-    }
-  }, [loginInfo.loading]);
+    console.log(loginInfo);
+  }, [loginInfo]);
 
-  console.log(loginInfo.error);
-  console.log(loginInfo.loading);
+  useEffect(() => {
+    console.log(logoutInfo);
+  }, [logoutInfo]);
 
-  return <LoginComponent />;
+  return (
+    <>
+      <LoginComponent />
+      <LogoutComponent />
+    </>
+  );
 }

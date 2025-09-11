@@ -1,6 +1,6 @@
 import { useLogin, useLogout } from 'abc-waas-core-sdk';
 export { AbcWaasProvider, useAbcWaas, useLogin, useLogout } from 'abc-waas-core-sdk';
-import { useCallback, useEffect, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { createRemoteJWKSet, jwtVerify, SignJWT } from 'jose';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 
@@ -380,10 +380,40 @@ var generateUUID = () => {
     return v.toString(16);
   });
 };
+var LOGIN_BUTTON_TEXT = {
+  google: {
+    ko: "Google\uB85C \uACC4\uC18D\uD558\uAE30",
+    en: "Continue with Google"
+  },
+  apple: {
+    ko: "Apple\uB85C \uACC4\uC18D\uD558\uAE30",
+    en: "Continue with Apple"
+  },
+  naver: {
+    ko: "\uB124\uC774\uBC84\uB85C \uACC4\uC18D\uD558\uAE30",
+    en: "Continue with NAVER"
+  },
+  kakao: {
+    ko: "\uCE74\uCE74\uC624\uB85C \uACC4\uC18D\uD558\uAE30",
+    en: "Continue with Kakao"
+  },
+  line: {
+    ko: "LINE\uC73C\uB85C \uACC4\uC18D\uD558\uAE30",
+    en: "Continue with LINE"
+  }
+};
+var LOGIN_TITLE_TEXT = {
+  ko: "\uC548\uB7A9 \uBE14\uB85D\uCCB4\uC778 \uCEF4\uD37C\uB2C8\nWallet-as-a-Service",
+  en: "AhnLab Blockchain Company\nWallet-as-a-Service"
+};
+var LOGIN_COPYRIGHT_TEXT = {
+  ko: "\xA9 AhnLab Blockchain Company. All rights reserved.",
+  en: "\xA9 AhnLab Blockchain Company. All rights reserved."
+};
 var providers = [
   {
     type: "google",
-    label: "Google\uB85C \uACC4\uC18D\uD558\uAE30",
+    label: LOGIN_BUTTON_TEXT.google,
     icon: icon_google_default,
     backgroundColor: "#ffffff",
     textColor: "#000000",
@@ -392,7 +422,7 @@ var providers = [
   },
   {
     type: "apple",
-    label: "Apple\uB85C \uACC4\uC18D\uD558\uAE30",
+    label: LOGIN_BUTTON_TEXT.apple,
     icon: icon_apple_default,
     backgroundColor: "#ffffff",
     textColor: "#000000",
@@ -401,7 +431,7 @@ var providers = [
   },
   {
     type: "naver",
-    label: "\uB124\uC774\uBC84\uB85C \uACC4\uC18D\uD558\uAE30",
+    label: LOGIN_BUTTON_TEXT.naver,
     icon: icon_naver_default,
     backgroundColor: "#ffffff",
     textColor: "#000000",
@@ -410,7 +440,7 @@ var providers = [
   },
   {
     type: "kakao",
-    label: "\uCE74\uCE74\uC624\uB85C \uACC4\uC18D\uD558\uAE30",
+    label: LOGIN_BUTTON_TEXT.kakao,
     icon: icon_kakao_default,
     backgroundColor: "#FEE500",
     textColor: "#000000",
@@ -419,7 +449,7 @@ var providers = [
   },
   {
     type: "line",
-    label: "LINE\uC73C\uB85C \uACC4\uC18D\uD558\uAE30",
+    label: LOGIN_BUTTON_TEXT.line,
     icon: icon_line_default,
     backgroundColor: "#03C75A",
     textColor: "#ffffff",
@@ -434,7 +464,7 @@ var metaContainerStyle = {
   justifyContent: "center",
   minHeight: "100vh",
   backgroundColor: "#f5f5f5",
-  padding: "20px"
+  padding: "0px 20px"
 };
 var containerStyle = {
   width: "100%",
@@ -465,21 +495,49 @@ var buttonBaseStyle = {
   alignItems: "center",
   justifyContent: "center",
   padding: "12px 16px",
-  fontSize: "16px",
+  fontSize: "0.9rem",
   borderRadius: "30px",
   width: "100%",
   marginBottom: "16px",
   cursor: "pointer",
-  transition: "all 0.2s ease-in-out",
+  transition: "all 0.1s ease-in-out",
   wordBreak: "break-all",
   flexWrap: "wrap",
   gap: "12px"
 };
+var languageSwitchStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: "24px",
+  gap: "8px"
+};
+var languageButtonBaseStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "0.8rem",
+  borderRadius: "20px",
+  cursor: "pointer",
+  transition: "all 0.1s ease-in-out"
+};
+var activeLanguageButtonStyle = __spreadProps(__spreadValues({}, languageButtonBaseStyle), {
+  backgroundColor: "#5B00EF",
+  color: "#ffffff",
+  border: "1px solid #5B00EF"
+});
+var inactiveLanguageButtonStyle = __spreadProps(__spreadValues({}, languageButtonBaseStyle), {
+  backgroundColor: "#ffffff",
+  color: "#666666",
+  border: "1px solid #dadce0"
+});
 function Login() {
+  var _a;
+  const [language, setLanguage] = useState("ko");
   const location = {
     search: window.location.search,
     hash: window.location.hash};
-  const { loginV2, loading, setLoading, error, setError, service, status } = useLogin();
+  const { loginV2, loginInfo, setLoginInfo, service } = useLogin();
   const handleRedirect = useCallback((provider) => {
     localStorage.setItem("provider", provider);
     if (provider === "google") {
@@ -572,146 +630,140 @@ function Login() {
       window.location.href = url.toString();
     }
   }, []);
-  const handleCallback = useCallback(
-    async (provider, data) => {
-      var _a;
-      try {
-        setLoading(true);
-        setError(null);
-        if (provider === "google") {
-          if (!process.env.REACT_APP_GOOGLE_CLIENT_ID || !process.env.REACT_APP_GOOGLE_CLIENT_SECRET || !process.env.REACT_APP_GOOGLE_REDIRECT_URI) {
-            throw new Error(
-              "Google client ID, client secret or redirect URI is not set."
-            );
-          }
-          const { code } = data;
-          const getGoogleTokenData = await getGoogleToken(
-            code,
-            process.env.REACT_APP_GOOGLE_CLIENT_ID,
-            process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
-            process.env.REACT_APP_GOOGLE_REDIRECT_URI
+  const handleCallback = useCallback(async (provider, data) => {
+    var _a2;
+    try {
+      setLoginInfo({
+        loading: true,
+        error: loginInfo.error,
+        status: loginInfo.status
+      });
+      if (provider === "google") {
+        if (!process.env.REACT_APP_GOOGLE_CLIENT_ID || !process.env.REACT_APP_GOOGLE_CLIENT_SECRET || !process.env.REACT_APP_GOOGLE_REDIRECT_URI) {
+          throw new Error(
+            "Google client ID, client secret or redirect URI is not set."
           );
-          const getGoogleTokeninfoData = await getGoogleTokeninfo(
-            getGoogleTokenData.id_token
-          );
-          await loginV2(
-            getGoogleTokeninfoData.email,
-            getGoogleTokenData.id_token,
-            provider
-          );
-        } else if (provider === "apple") {
-          if (!process.env.REACT_APP_APPLE_CLIENT_ID || !process.env.REACT_APP_APPLE_REDIRECT_URI || !process.env.REACT_APP_APPLE_TEAM_ID || !process.env.REACT_APP_APPLE_KEY_ID || !process.env.REACT_APP_APPLE_PRIVATE_KEY) {
-            throw new Error(
-              "Apple client ID, redirect URI, team ID, key ID or private key is not set."
-            );
-          }
-          const { code, id_token } = data;
-          await verifyAppleToken(
-            id_token,
-            process.env.REACT_APP_APPLE_CLIENT_ID
-          );
-          const APPLE_CLIENT_SECRET = await createAppleClientSecret(
-            id_token,
-            process.env.REACT_APP_APPLE_PRIVATE_KEY,
-            process.env.REACT_APP_APPLE_TEAM_ID,
-            process.env.REACT_APP_APPLE_KEY_ID
-          );
-          const getAppleTokenData = await getAppleToken(
-            code,
-            process.env.REACT_APP_APPLE_CLIENT_ID,
-            APPLE_CLIENT_SECRET,
-            process.env.REACT_APP_APPLE_REDIRECT_URI
-          );
-          const getAppleDecodedTokenData = JSON.parse(
-            atob((_a = getAppleTokenData == null ? void 0 : getAppleTokenData.id_token) == null ? void 0 : _a.split(".")[1])
-          );
-          await verifyAppleToken(
-            id_token,
-            process.env.REACT_APP_APPLE_CLIENT_ID
-          );
-          await loginV2(
-            getAppleDecodedTokenData.email,
-            getAppleTokenData.id_token,
-            provider
-          );
-        } else if (provider === "naver") {
-          if (!process.env.REACT_APP_NAVER_CLIENT_ID || !process.env.REACT_APP_NAVER_CLIENT_SECRET || !process.env.REACT_APP_NAVER_REDIRECT_URI) {
-            throw new Error(
-              "Naver client ID, client secret or redirect URI is not set."
-            );
-          }
-          const { code } = data;
-          const getNaverTokenData = await getNaverToken(
-            code,
-            process.env.REACT_APP_NAVER_CLIENT_ID,
-            process.env.REACT_APP_NAVER_CLIENT_SECRET,
-            process.env.REACT_APP_NAVER_REDIRECT_URI
-          );
-          const getNaverTokeninfoData = await getNaverTokeninfo(
-            getNaverTokenData.access_token
-          );
-          await loginV2(
-            getNaverTokeninfoData.response.email,
-            getNaverTokenData.access_token,
-            provider
-          );
-        } else if (provider === "kakao") {
-          if (!process.env.REACT_APP_KAKAO_REST_API_KEY || !process.env.REACT_APP_KAKAO_REDIRECT_URI) {
-            throw new Error("Kakao client ID or redirect URI is not set.");
-          }
-          const { code } = data;
-          const getKakaoTokenData = await getKakaoToken(
-            code,
-            process.env.REACT_APP_KAKAO_REST_API_KEY,
-            process.env.REACT_APP_KAKAO_REDIRECT_URI
-          );
-          await verifyKakaoToken(
-            getKakaoTokenData.id_token,
-            process.env.REACT_APP_KAKAO_REST_API_KEY
-          );
-          const getKakaoTokeninfoData = await getKakaoTokeninfo(
-            getKakaoTokenData.access_token
-          );
-          await loginV2(
-            getKakaoTokeninfoData.kakao_account.email,
-            getKakaoTokenData.id_token,
-            provider
-          );
-        } else if (provider === "line") {
-          if (!process.env.REACT_APP_LINE_CLIENT_ID || !process.env.REACT_APP_LINE_CLIENT_SECRET || !process.env.REACT_APP_LINE_REDIRECT_URI) {
-            throw new Error(
-              "Line client ID, client secret or redirect URI is not set."
-            );
-          }
-          const { code } = data;
-          const getLineTokenData = await getLineToken(
-            code,
-            process.env.REACT_APP_LINE_CLIENT_ID,
-            process.env.REACT_APP_LINE_CLIENT_SECRET,
-            process.env.REACT_APP_LINE_REDIRECT_URI
-          );
-          const getLineTokeninfoData = await getLineTokeninfo(
-            getLineTokenData.id_token,
-            process.env.REACT_APP_LINE_CLIENT_ID
-          );
-          await loginV2(
-            getLineTokeninfoData.email,
-            getLineTokenData.id_token,
-            provider
-          );
-        } else {
-          throw new Error("Invalid provider.");
         }
-      } catch (error2) {
-        if (error2) {
-          setError(error2);
+        const { code } = data;
+        const getGoogleTokenData = await getGoogleToken(
+          code,
+          process.env.REACT_APP_GOOGLE_CLIENT_ID,
+          process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
+          process.env.REACT_APP_GOOGLE_REDIRECT_URI
+        );
+        const getGoogleTokeninfoData = await getGoogleTokeninfo(
+          getGoogleTokenData.id_token
+        );
+        await loginV2(
+          getGoogleTokeninfoData.email,
+          getGoogleTokenData.id_token,
+          provider
+        );
+      } else if (provider === "apple") {
+        if (!process.env.REACT_APP_APPLE_CLIENT_ID || !process.env.REACT_APP_APPLE_REDIRECT_URI || !process.env.REACT_APP_APPLE_TEAM_ID || !process.env.REACT_APP_APPLE_KEY_ID || !process.env.REACT_APP_APPLE_PRIVATE_KEY) {
+          throw new Error(
+            "Apple client ID, redirect URI, team ID, key ID or private key is not set."
+          );
         }
-      } finally {
-        setLoading(false);
+        const { code, id_token } = data;
+        await verifyAppleToken(id_token, process.env.REACT_APP_APPLE_CLIENT_ID);
+        const APPLE_CLIENT_SECRET = await createAppleClientSecret(
+          id_token,
+          process.env.REACT_APP_APPLE_PRIVATE_KEY,
+          process.env.REACT_APP_APPLE_TEAM_ID,
+          process.env.REACT_APP_APPLE_KEY_ID
+        );
+        const getAppleTokenData = await getAppleToken(
+          code,
+          process.env.REACT_APP_APPLE_CLIENT_ID,
+          APPLE_CLIENT_SECRET,
+          process.env.REACT_APP_APPLE_REDIRECT_URI
+        );
+        const getAppleDecodedTokenData = JSON.parse(
+          atob((_a2 = getAppleTokenData == null ? void 0 : getAppleTokenData.id_token) == null ? void 0 : _a2.split(".")[1])
+        );
+        await verifyAppleToken(id_token, process.env.REACT_APP_APPLE_CLIENT_ID);
+        await loginV2(
+          getAppleDecodedTokenData.email,
+          getAppleTokenData.id_token,
+          provider
+        );
+      } else if (provider === "naver") {
+        if (!process.env.REACT_APP_NAVER_CLIENT_ID || !process.env.REACT_APP_NAVER_CLIENT_SECRET || !process.env.REACT_APP_NAVER_REDIRECT_URI) {
+          throw new Error(
+            "Naver client ID, client secret or redirect URI is not set."
+          );
+        }
+        const { code } = data;
+        const getNaverTokenData = await getNaverToken(
+          code,
+          process.env.REACT_APP_NAVER_CLIENT_ID,
+          process.env.REACT_APP_NAVER_CLIENT_SECRET,
+          process.env.REACT_APP_NAVER_REDIRECT_URI
+        );
+        const getNaverTokeninfoData = await getNaverTokeninfo(
+          getNaverTokenData.access_token
+        );
+        await loginV2(
+          getNaverTokeninfoData.response.email,
+          getNaverTokenData.access_token,
+          provider
+        );
+      } else if (provider === "kakao") {
+        if (!process.env.REACT_APP_KAKAO_REST_API_KEY || !process.env.REACT_APP_KAKAO_REDIRECT_URI) {
+          throw new Error("Kakao client ID or redirect URI is not set.");
+        }
+        const { code } = data;
+        const getKakaoTokenData = await getKakaoToken(
+          code,
+          process.env.REACT_APP_KAKAO_REST_API_KEY,
+          process.env.REACT_APP_KAKAO_REDIRECT_URI
+        );
+        await verifyKakaoToken(
+          getKakaoTokenData.id_token,
+          process.env.REACT_APP_KAKAO_REST_API_KEY
+        );
+        const getKakaoTokeninfoData = await getKakaoTokeninfo(
+          getKakaoTokenData.access_token
+        );
+        await loginV2(
+          getKakaoTokeninfoData.kakao_account.email,
+          getKakaoTokenData.id_token,
+          provider
+        );
+      } else if (provider === "line") {
+        if (!process.env.REACT_APP_LINE_CLIENT_ID || !process.env.REACT_APP_LINE_CLIENT_SECRET || !process.env.REACT_APP_LINE_REDIRECT_URI) {
+          throw new Error(
+            "Line client ID, client secret or redirect URI is not set."
+          );
+        }
+        const { code } = data;
+        const getLineTokenData = await getLineToken(
+          code,
+          process.env.REACT_APP_LINE_CLIENT_ID,
+          process.env.REACT_APP_LINE_CLIENT_SECRET,
+          process.env.REACT_APP_LINE_REDIRECT_URI
+        );
+        const getLineTokeninfoData = await getLineTokeninfo(
+          getLineTokenData.id_token,
+          process.env.REACT_APP_LINE_CLIENT_ID
+        );
+        await loginV2(
+          getLineTokeninfoData.email,
+          getLineTokenData.id_token,
+          provider
+        );
+      } else {
+        throw new Error("Invalid provider.");
       }
-    },
-    [loginV2, error]
-  );
+    } catch (error) {
+      setLoginInfo({
+        loading: false,
+        error,
+        status: "FAILURE"
+      });
+    }
+  }, []);
   useEffect(() => {
     const provider = localStorage.getItem("provider");
     if (provider === "google") {
@@ -773,10 +825,6 @@ function Login() {
       }
     }
   }, [location.search, location.hash]);
-  console.log(loading);
-  console.log(service);
-  console.log(error);
-  console.log(status);
   return /* @__PURE__ */ jsx("div", { style: metaContainerStyle, children: /* @__PURE__ */ jsxs("div", { style: containerStyle, children: [
     /* @__PURE__ */ jsx("div", { style: titleContainerStyle, children: /* @__PURE__ */ jsx(
       "span",
@@ -784,13 +832,13 @@ function Login() {
         style: {
           textAlign: "center",
           marginBottom: "36px",
-          fontSize: "18px",
+          fontSize: "1rem",
           fontWeight: "bold",
           color: "#333333",
           whiteSpace: "pre-line",
           lineHeight: "1.5"
         },
-        children: "AhnLab Blockchain Company\nWallet-as-a-Service"
+        children: LOGIN_TITLE_TEXT[language]
       }
     ) }),
     /* @__PURE__ */ jsxs("div", { style: contentContainerStyle, children: [
@@ -798,7 +846,7 @@ function Login() {
         "button",
         {
           onClick: () => handleRedirect(item.type),
-          disabled: loading,
+          disabled: loginInfo.loading,
           style: __spreadProps(__spreadValues({}, buttonBaseStyle), {
             backgroundColor: item.backgroundColor,
             color: item.textColor,
@@ -806,7 +854,7 @@ function Login() {
           }),
           onMouseEnter: (event) => event.currentTarget.style.backgroundColor = item.hoverColor,
           onMouseLeave: (event) => event.currentTarget.style.backgroundColor = item.backgroundColor,
-          children: loading && service === item.type ? /* @__PURE__ */ jsx(
+          children: loginInfo.loading && service === item.type ? /* @__PURE__ */ jsx(
             "img",
             {
               src: animation_loading_default,
@@ -825,7 +873,7 @@ function Login() {
                 }
               }
             ),
-            item.label
+            item.label[language]
           ] })
         },
         item.type
@@ -840,7 +888,7 @@ function Login() {
             alignItems: "center",
             justifyContent: "center"
           },
-          children: (error == null ? void 0 : error.message) && /* @__PURE__ */ jsx(
+          children: ((_a = loginInfo.error) == null ? void 0 : _a.message) && /* @__PURE__ */ jsx(
             "span",
             {
               style: {
@@ -849,13 +897,51 @@ function Login() {
                 display: "block",
                 width: "100%",
                 marginBottom: "24px",
-                fontSize: "12px"
+                fontSize: "0.8rem"
               },
-              children: error.message
+              children: loginInfo.error.message
             }
           )
         }
       ),
+      /* @__PURE__ */ jsxs("div", { style: languageSwitchStyle, children: [
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setLanguage("ko"),
+            style: language === "ko" ? activeLanguageButtonStyle : inactiveLanguageButtonStyle,
+            onMouseEnter: (event) => {
+              if (language !== "ko") {
+                event.currentTarget.style.backgroundColor = "#f7f7f7";
+              }
+            },
+            onMouseLeave: (event) => {
+              if (language !== "ko") {
+                event.currentTarget.style.backgroundColor = "#ffffff";
+              }
+            },
+            children: "\uD55C\uAD6D\uC5B4"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setLanguage("en"),
+            style: language === "en" ? activeLanguageButtonStyle : inactiveLanguageButtonStyle,
+            onMouseEnter: (event) => {
+              if (language !== "en") {
+                event.currentTarget.style.backgroundColor = "#f7f7f7";
+              }
+            },
+            onMouseLeave: (event) => {
+              if (language !== "en") {
+                event.currentTarget.style.backgroundColor = "#ffffff";
+              }
+            },
+            children: "English"
+          }
+        )
+      ] }),
       /* @__PURE__ */ jsx(
         "div",
         {
@@ -873,9 +959,9 @@ function Login() {
                 textAlign: "center",
                 display: "block",
                 width: "100%",
-                fontSize: "10px"
+                fontSize: "0.6rem"
               },
-              children: "\xA9 AhnLab Blockchain Company. All rights reserved."
+              children: LOGIN_COPYRIGHT_TEXT[language]
             }
           )
         }
@@ -883,47 +969,12 @@ function Login() {
     ] })
   ] }) });
 }
-var metaContainerStyle2 = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  width: "100%",
-  minHeight: "100vh",
-  backgroundColor: "#f5f5f5",
-  padding: "20px 0",
-  boxSizing: "border-box"
-};
-var containerStyle2 = {
-  width: "100%",
-  maxWidth: "340px",
-  boxSizing: "border-box",
-  padding: "40px 30px",
-  borderRadius: "30px",
-  color: "#333",
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-  whiteSpace: "pre-wrap",
-  wordBreak: "break-all",
-  backgroundColor: "#ffffff"
-};
-var titleContainerStyle2 = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center"
-};
-var contentContainerStyle2 = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center"
-};
 var buttonBaseStyle2 = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   padding: "12px 16px",
-  fontSize: "16px",
+  fontSize: "0.9rem",
   borderRadius: "30px",
   width: "100%",
   marginBottom: "16px",
@@ -934,261 +985,63 @@ var buttonBaseStyle2 = {
   gap: "12px",
   border: "1px solid #dadce0"
 };
-var logoutButtonStyle = __spreadProps(__spreadValues({}, buttonBaseStyle2), {
+var activeButtonStyle = __spreadProps(__spreadValues({}, buttonBaseStyle2), {
   backgroundColor: "#ffffff",
   color: "#000000"
 });
-var confirmButtonStyle = __spreadProps(__spreadValues({}, buttonBaseStyle2), {
-  backgroundColor: "#dc3545",
-  color: "#ffffff",
-  border: "1px solid #dc3545"
-});
-var cancelButtonStyle = __spreadProps(__spreadValues({}, buttonBaseStyle2), {
-  backgroundColor: "#6c757d",
-  color: "#ffffff",
-  border: "1px solid #6c757d"
+var inactiveButtonStyle = __spreadProps(__spreadValues({}, buttonBaseStyle2), {
+  backgroundColor: "#f5f5f5",
+  color: "#999999",
+  cursor: "not-allowed",
+  border: "1px solid #e0e0e0"
 });
 function Logout() {
-  const {
-    logoutV2,
-    loading: logoutLoading,
-    setLoading: setLogoutLoading,
-    error: logoutError,
-    setError: setLogoutError,
-    status: logoutStatus
-  } = useLogout();
-  const {
-    loading: loginLoading,
-    error: loginError,
-    status: loginStatus
-  } = useLogin();
-  const [showConfirm, setShowConfirm] = useState(false);
+  const { logoutV2, logoutInfo, setLogoutInfo } = useLogout();
+  const { loginInfo } = useLogin();
   const handleLogout = async () => {
+    if (loginInfo.status !== "SUCCESS" || logoutInfo.loading) return;
     try {
+      setLogoutInfo({
+        loading: true,
+        error: logoutInfo.error,
+        status: logoutInfo.status
+      });
       await logoutV2();
-      setShowConfirm(false);
     } catch (error) {
-      console.error("Logout error:", error);
+      setLogoutInfo({
+        loading: false,
+        error,
+        status: "FAILURE"
+      });
     }
   };
-  const handleLogoutClick = () => {
-    setShowConfirm(true);
-  };
-  const handleCancel = () => {
-    setShowConfirm(false);
-  };
-  if (loginStatus !== "SUCCESS") {
-    return /* @__PURE__ */ jsx("div", { style: metaContainerStyle2, children: /* @__PURE__ */ jsxs("div", { style: containerStyle2, children: [
-      /* @__PURE__ */ jsx("div", { style: titleContainerStyle2, children: /* @__PURE__ */ jsx(
-        "span",
-        {
-          style: {
-            textAlign: "center",
-            marginBottom: "36px",
-            fontSize: "20px",
-            fontWeight: "bold",
-            color: "#333333",
-            whiteSpace: "pre-line",
-            lineHeight: "1.5"
-          },
-          children: "AhnLab Blockchain Company\nWallet-as-a-Service"
+  const LOGOUT_BUTTON_TEXT = "\uB85C\uADF8\uC544\uC6C3";
+  return /* @__PURE__ */ jsx(
+    "button",
+    {
+      onClick: handleLogout,
+      disabled: loginInfo.status !== "SUCCESS" || logoutInfo.loading,
+      style: loginInfo.status === "SUCCESS" ? activeButtonStyle : inactiveButtonStyle,
+      onMouseEnter: (event) => {
+        if (loginInfo.status === "SUCCESS" && !logoutInfo.loading) {
+          event.currentTarget.style.backgroundColor = "#f7f7f7";
         }
-      ) }),
-      /* @__PURE__ */ jsxs("div", { style: contentContainerStyle2, children: [
-        /* @__PURE__ */ jsx(
-          "div",
-          {
-            style: {
-              textAlign: "center",
-              marginBottom: "24px",
-              fontSize: "16px",
-              color: "#666666"
-            },
-            children: "\uB85C\uADF8\uC778\uB418\uC9C0 \uC54A\uC740 \uC0C1\uD0DC\uC785\uB2C8\uB2E4."
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          "div",
-          {
-            style: {
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: "24px"
-            },
-            children: /* @__PURE__ */ jsx(
-              "span",
-              {
-                style: {
-                  color: "#666666",
-                  textAlign: "center",
-                  display: "block",
-                  width: "100%",
-                  fontSize: "10px"
-                },
-                children: "\xA9 AhnLab Blockchain Company. All rights reserved."
-              }
-            )
-          }
-        )
-      ] })
-    ] }) });
-  }
-  return /* @__PURE__ */ jsx("div", { style: metaContainerStyle2, children: /* @__PURE__ */ jsxs("div", { style: containerStyle2, children: [
-    /* @__PURE__ */ jsx("div", { style: titleContainerStyle2, children: /* @__PURE__ */ jsx(
-      "span",
-      {
-        style: {
-          textAlign: "center",
-          marginBottom: "36px",
-          fontSize: "20px",
-          fontWeight: "bold",
-          color: "#333333",
-          whiteSpace: "pre-line",
-          lineHeight: "1.5"
-        },
-        children: "AhnLab Blockchain Company\nWallet-as-a-Service"
-      }
-    ) }),
-    /* @__PURE__ */ jsxs("div", { style: contentContainerStyle2, children: [
-      /* @__PURE__ */ jsxs(
-        "div",
-        {
-          style: {
-            width: "100%",
-            textAlign: "center",
-            marginBottom: "24px",
-            padding: "16px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "12px",
-            fontSize: "14px",
-            color: "#333333"
-          },
-          children: [
-            /* @__PURE__ */ jsx("div", { style: { marginBottom: "8px", fontWeight: "bold" }, children: "\uB85C\uADF8\uC778\uB41C \uACC4\uC815" }),
-            /* @__PURE__ */ jsx("div", { style: { marginBottom: "4px" }, children: "\uB85C\uADF8\uC544\uC6C3\uC744 \uC9C4\uD589\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?" })
-          ]
+      },
+      onMouseLeave: (event) => {
+        if (loginInfo.status === "SUCCESS" && !logoutInfo.loading) {
+          event.currentTarget.style.backgroundColor = "#ffffff";
         }
-      ),
-      !showConfirm ? (
-        // Logout Button
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            onClick: handleLogoutClick,
-            disabled: logoutLoading,
-            style: logoutButtonStyle,
-            onMouseEnter: (event) => event.currentTarget.style.backgroundColor = "#f7f7f7",
-            onMouseLeave: (event) => event.currentTarget.style.backgroundColor = "#ffffff",
-            children: logoutLoading ? /* @__PURE__ */ jsx(
-              "img",
-              {
-                src: animation_loading_default,
-                alt: "loading",
-                style: { width: "24px", height: "24px" }
-              }
-            ) : "\uB85C\uADF8\uC544\uC6C3"
-          }
-        )
-      ) : (
-        // Confirmation Buttons
-        /* @__PURE__ */ jsxs(Fragment, { children: [
-          /* @__PURE__ */ jsx(
-            "div",
-            {
-              style: {
-                textAlign: "center",
-                marginBottom: "24px",
-                fontSize: "16px",
-                color: "#333333"
-              },
-              children: "\uC815\uB9D0 \uB85C\uADF8\uC544\uC6C3\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: handleLogout,
-              disabled: logoutLoading,
-              style: confirmButtonStyle,
-              onMouseEnter: (event) => event.currentTarget.style.backgroundColor = "#bb2d3b",
-              onMouseLeave: (event) => event.currentTarget.style.backgroundColor = "#dc3545",
-              children: logoutLoading ? /* @__PURE__ */ jsx(
-                "img",
-                {
-                  src: animation_loading_default,
-                  alt: "loading",
-                  style: { width: "24px", height: "24px" }
-                }
-              ) : "\uD655\uC778"
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: handleCancel,
-              disabled: logoutLoading,
-              style: cancelButtonStyle,
-              onMouseEnter: (event) => event.currentTarget.style.backgroundColor = "#5c636a",
-              onMouseLeave: (event) => event.currentTarget.style.backgroundColor = "#6c757d",
-              children: "\uCDE8\uC18C"
-            }
-          )
-        ] })
-      ),
-      /* @__PURE__ */ jsx(
-        "div",
+      },
+      children: logoutInfo.loading ? /* @__PURE__ */ jsx(
+        "img",
         {
-          style: {
-            width: "100%",
-            minHeight: "31px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          },
-          children: (logoutError == null ? void 0 : logoutError.message) && /* @__PURE__ */ jsx(
-            "span",
-            {
-              style: {
-                color: "red",
-                textAlign: "center",
-                display: "block",
-                width: "100%",
-                marginBottom: "12px",
-                fontSize: "12px"
-              },
-              children: logoutError.message
-            }
-          )
+          src: animation_loading_default,
+          alt: "loading",
+          style: { width: "24px", height: "24px" }
         }
-      ),
-      /* @__PURE__ */ jsx(
-        "div",
-        {
-          style: {
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          },
-          children: /* @__PURE__ */ jsx(
-            "span",
-            {
-              style: {
-                color: "#666666",
-                textAlign: "center",
-                display: "block",
-                width: "100%",
-                fontSize: "10px"
-              },
-              children: "\xA9 AhnLab Blockchain Company. All rights reserved."
-            }
-          )
-        }
-      )
-    ] })
-  ] }) });
+      ) : LOGOUT_BUTTON_TEXT
+    }
+  );
 }
 
 export { Login, Logout };
