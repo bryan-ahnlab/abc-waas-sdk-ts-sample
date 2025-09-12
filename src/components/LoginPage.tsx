@@ -1,29 +1,32 @@
 // src/components/LoginPage.tsx
 
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Login as LoginComponent,
-  Logout as LogoutComponent,
   useLogin,
   useLogout,
 } from "abc-waas-prebuiltui-sdk";
 
 export default function LoginPage() {
   const { loginInfo } = useLogin();
-  const { logoutInfo } = useLogout();
+  const { logoutInfo, setLogoutInfo } = useLogout();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(loginInfo);
-  }, [loginInfo]);
+    if (
+      loginInfo.status === "SUCCESS" &&
+      (logoutInfo.status === "IDLE" || logoutInfo.status === "SUCCESS")
+    ) {
+      setLogoutInfo({
+        loading: false,
+        error: null,
+        status: "IDLE",
+      });
+      console.info("Success Login, Redirect to LogoutPage");
+      navigate("/logout");
+    }
+  }, [loginInfo, navigate, logoutInfo, setLogoutInfo]);
 
-  useEffect(() => {
-    console.log(logoutInfo);
-  }, [logoutInfo]);
-
-  return (
-    <>
-      <LoginComponent />
-      <LogoutComponent />
-    </>
-  );
+  return <LoginComponent />;
 }

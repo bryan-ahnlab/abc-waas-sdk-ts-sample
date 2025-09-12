@@ -36,6 +36,8 @@ export default function Information() {
     abcWallet,
     abcUser,
     secureChannel,
+
+    loginInfo,
   } = useAbcWaas();
 
   const data = {
@@ -51,7 +53,7 @@ export default function Information() {
 
   return (
     <>
-      {email && (
+      {loginInfo.status === "SUCCESS" && (
         <div style={containerStyle}>
           <h2 style={{ textAlign: "center", marginBottom: "24px" }}>
             ABC WaaS Information
